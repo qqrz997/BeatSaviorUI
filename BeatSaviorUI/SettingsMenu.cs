@@ -6,60 +6,39 @@ namespace BeatSaviorUI
 {
 	class SettingsMenu : PersistentSingleton<SettingsMenu>
 	{
-		private static readonly Config config = new Config("BeatSaviorData");
-
-		/*[UIValue("DisablePass")]
-		public bool DisablePass
-		{
-			get => config.GetBool("BeatSaviorData", "DisablePass", false, true);
-			set => config.SetBool("BeatSaviorData", "DisablePass", value);
-		}*/
-
-		/*[UIValue("DisableFail")]
-		public bool DisableFails
-		{
-			get => config.GetBool("BeatSaviorData", "DisableFails", false, true);
-			set => config.SetBool("BeatSaviorData", "DisableFails", value);
-		}*/
+		private static readonly Config config = new Config(Plugin.Name);
 
 		[UIValue("HideNbOfPauses")]
 		public bool HideNbOfPauses
 		{
-			get => config.GetBool("BeatSaviorData", "HideNbOfPauses", false, true);
-			set => config.SetBool("BeatSaviorData", "HideNbOfPauses", value);
+			get => config.GetBool(Plugin.Name, "HideNbOfPauses", false, true);
+			set => config.SetBool(Plugin.Name, "HideNbOfPauses", value);
 		}
 
 		[UIValue("EnableUI")]
 		public bool EnableUI
 		{
-			get => config.GetBool("BeatSaviorData", "EnableUI", true, true);
-			set => config.SetBool("BeatSaviorData", "EnableUI", value);
+			get => config.GetBool(Plugin.Name, "EnableUI", true, true);
+			set => config.SetBool(Plugin.Name, "EnableUI", value);
 		}
 
 		[UIValue("DisableGraphPanel")]
 		public bool DisableGraphPanel
 		{
-			get => config.GetBool("BeatSaviorData", "DisableGraphPanel", false, true);
-			set => config.SetBool("BeatSaviorData", "DisableGraphPanel", value);
+			get => config.GetBool(Plugin.Name, "DisableGraphPanel", false, true);
+			set => config.SetBool(Plugin.Name, "DisableGraphPanel", value);
 		}
-
-		/*[UIValue("DisableBeatSaviorUpload")]
-		public bool DisableBeatSaviorUpload
-		{
-			get => config.GetBool("BeatSaviorData", "DisableBeatSaviorUpload", false, true);
-			set => config.SetBool("BeatSaviorData", "DisableBeatSaviorUpload", value);
-		}*/
 
 		public bool EnableCustomUrlUpload
 		{
-			get => config.GetBool("BeatSaviorData", "EnableCustomUrlUpload", false, true);
-			set => config.SetBool("BeatSaviorData", "EnableCustomUrlUpload", value);
+			get => config.GetBool(Plugin.Name, "EnableCustomUrlUpload", false, true);
+			set => config.SetBool(Plugin.Name, "EnableCustomUrlUpload", value);
 		}
 
 		public string CustomUploadUrl
 		{
-			get => config.GetString("BeatSaviorData", "CustomUploadUrl", "", true);
-			set => config.GetString("BeatSaviorData", "CustomUploadUrl", value);
+			get => config.GetString(Plugin.Name, "CustomUploadUrl", "", true);
+			set => config.GetString(Plugin.Name, "CustomUploadUrl", value);
 		}
 	}
 }

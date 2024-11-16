@@ -16,7 +16,7 @@ namespace BeatSaviorUI
 	[Plugin(RuntimeOptions.SingleStartInit)]
 	public class Plugin
 	{
-		internal static string Name => "BeatSaviorData";
+		internal static string Name => nameof(BeatSaviorUI);
 		internal static bool fish;
 
 		private Harmony harmony;
@@ -48,7 +48,7 @@ namespace BeatSaviorUI
 			BSEvents.levelQuit += DiscardSongData;
 			BSEvents.levelRestarted += DiscardSongData;
 
-			harmony = new Harmony("BeatSaviorData");
+			harmony = new Harmony(Name);
 
 			// Patch Classes
 			harmony.PatchAll(System.Reflection.Assembly.GetExecutingAssembly());
@@ -59,7 +59,7 @@ namespace BeatSaviorUI
 
         private void AddSettingsMenuOnMenuLoad(ScenesTransitionSetupDataSO sO)
         {
-            BSMLSettings.Instance.AddSettingsMenu("BeatSaviorData", "BeatSaviorData.UI.Views.SettingsView.bsml", SettingsMenu.instance);
+            BSMLSettings.Instance.AddSettingsMenu(Name, "BeatSaviorData.UI.Views.SettingsView.bsml", SettingsMenu.instance);
         }
 
         private void UploadStats(ScenesTransitionSetupDataSO obj)

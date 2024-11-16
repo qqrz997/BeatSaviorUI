@@ -13,7 +13,7 @@ namespace BeatSaviorUI
 {
 	class ScoreGraphUI : BSMLResourceViewController
 	{
-		public override string ResourceName => "BeatSaviorData.UI.Views.ScoreGraphView.bsml";
+		public override string ResourceName => $"{Plugin.Name}.UI.Views.ScoreGraphView.bsml";
 
 		#pragma warning disable 0649    // Disables the "never assigned" warning
 		[UIObject("graph")]

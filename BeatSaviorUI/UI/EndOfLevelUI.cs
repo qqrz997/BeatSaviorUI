@@ -99,7 +99,7 @@ namespace BeatSaviorUI
         private readonly Color32 goldColor = new Color32(237, 201, 103, 255);
         private readonly List<(float, float)> curve = new List<(float, float)>() { (0, 0), (40, 8), (50, 15), (69, 25), (75, 42.5f), (82, 56), (84.5f, 63), (86, 72), (88, 76.6f), (90, 81.5f), (91, 85), (92, 88.5f), (93, 92), (94, 97.4f), (95, 103.6f), (100, 110) };
 
-        public override string ResourceName => "BeatSaviorData.UI.Views.EndOfLevelView.bsml";
+        public override string ResourceName => $"{Plugin.Name}.UI.Views.EndOfLevelView.bsml";
         private bool postParseDone = false;
         private SongData tmpData;
         private ImageView songCoverImg, upperBandImg, lowerBandImg, leftCircleImg, rightCircleImg;

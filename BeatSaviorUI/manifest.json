@@ -1,7 +1,7 @@
 ﻿{
   "$schema": "https://raw.githubusercontent.com/nike4613/ModSaber-MetadataFileSchema/master/Schema.json",
-  "id": "BeatSaviorData",
-  "name": "BeatSaviorData",
+  "id": "BeatSaviorUI",
+  "name": "BeatSaviorUI",
   "author": "Mystogan",
   "version": "2.1.16",
   "description": "Show in-depth stats and a score graph at the end of songs, uploads part of those stats to Beat Savior, and save in-depth stats localy",
@@ -13,6 +13,6 @@
   },
   "loadAfter": [ "BS Utils", "BeatSaberMarkupLanguage" ],
   "links": {
-    "project-home": "https://github.com/Mystogan98/BeatSaviorData"
+    "project-home": "https://github.com/qqrz997/BeatSaviorUI"
    }
 }

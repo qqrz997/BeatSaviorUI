@@ -131,7 +131,7 @@
   
   <ItemGroup>
     <None Include="Directory.Build.props" Condition="Exists('Directory.Build.props')" />
-    <None Include="BeatSaviorData.csproj.user" Condition="Exists('BeatSaviorData.csproj.user')" />
+    <None Include="BeatSaviorUI.csproj.user" Condition="Exists('BeatSaviorUI.csproj.user')" />
   </ItemGroup>
   
   <ItemGroup>
