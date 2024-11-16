@@ -10,7 +10,6 @@ using BeatSaviorData.Trackers;
 using System.Security.Cryptography.X509Certificates;
 using System.Net;
 using System.Net.Security;
-using BeatSaberMarkupLanguage.Util;
 
 namespace BeatSaviorData
 {

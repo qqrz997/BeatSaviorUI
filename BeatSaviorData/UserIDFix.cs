@@ -1,8 +1,4 @@
-﻿using IPA.Utilities;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using System.Threading.Tasks;
 using BS_Utils.Gameplay;
 
 namespace BeatSaviorData

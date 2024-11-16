@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace BeatSaviorData.Trackers
+﻿namespace BeatSaviorData.Trackers
 {
 	class AccuracyTracker : ITracker
 	{
