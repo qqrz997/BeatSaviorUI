@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeatSaviorUI", "BeatSaviorUI\BeatSaviorUI.csproj", "{33735E09-909C-4737-878D-02C4B4279863}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{33735E09-909C-4737-878D-02C4B4279863}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33735E09-909C-4737-878D-02C4B4279863}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33735E09-909C-4737-878D-02C4B4279863}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33735E09-909C-4737-878D-02C4B4279863}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D9F32F77-AF50-4903-A25C-5D0A0C38F342}
+	EndGlobalSection
+EndGlobal
