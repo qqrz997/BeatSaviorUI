@@ -1,8 +1,8 @@
-﻿using IPA.Utilities;
-using System;
+﻿using System;
+using IPA.Utilities;
 using UnityEngine;
 
-namespace BeatSaviorUI
+namespace BeatSaviorUI.Stats
 {
 	public enum BSDNoteType
 	{
@@ -42,12 +42,14 @@ namespace BeatSaviorUI
 			noteCenter = Utils.FloatArrayFromVector(goodcut.cutScoreBuffer.noteCutInfo.notePosition);
 			noteRotation = Utils.FloatArrayFromVector(goodcut.cutScoreBuffer.noteCutInfo.noteRotation.eulerAngles);
 
-			if (data.colorType == ColorType.ColorB)
-				noteType = BSDNoteType.right;
-			else if (data.colorType == ColorType.ColorA)
-				noteType = BSDNoteType.left;
+			noteType = data.colorType switch
+			{
+				ColorType.ColorB => BSDNoteType.right,
+				ColorType.ColorA => BSDNoteType.left,
+				_ => noteType
+			};
 
-			score = new int[] { 0, 0, 0 };
+			score = [0, 0, 0];
 			index = data.lineIndex + 4 * (int)data.noteLineLayer;
 			time = data.time;
 			id = actualId;
@@ -69,7 +71,7 @@ namespace BeatSaviorUI
 			else if (data.colorType == ColorType.ColorA)
 				noteType = BSDNoteType.left;
 
-			score = new int[] { 0, 0, 0 };
+			score = [0, 0, 0];
 			index = data.lineIndex + 4 * (int)data.noteLineLayer;
 			time = data.time;
 			id = actualId;

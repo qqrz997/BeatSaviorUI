@@ -4,8 +4,8 @@
 
     <!-- Plugin Metadata -->
     <PropertyGroup>
-        <PluginId>BeatSaviorData</PluginId>
-        <PluginName>BeatSaviorData</PluginName>
+        <PluginId>BeatSaviorUI</PluginId>
+        <PluginName>BeatSaviorUI</PluginName>
         <Authors>Mystogan, qqrz997</Authors>
         <Version>2.1.16</Version>
         <GameVersion>1.39.0</GameVersion>

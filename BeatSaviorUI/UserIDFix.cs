@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using BS_Utils.Gameplay;
 
 namespace BeatSaviorUI
 {
@@ -23,7 +22,7 @@ namespace BeatSaviorUI
 
         private static async Task WaitForUserID()
         {
-            user = await GetUserInfo.GetUserAsync();
+            // user = await GetUserInfo.GetUserAsync();
         }
     }
 }

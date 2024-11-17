@@ -2,34 +2,24 @@
 
 namespace BeatSaviorUI
 {
-	class Utils
+	internal static class SafeMath
 	{
-		public static System.Random random = new System.Random();
-		public static float SafeDivide(float a, float b)
-		{
-			try
-			{
-				return a / b;
-			}
-			catch
-			{
-				return 0;
-			}
-		}
+		public static float Divide(float top, float bottom) =>
+			bottom == 0 ? 0 : top / bottom;
 
-		public static float SafeAverage(float a, float nbA, float b, float nbB)
-		{
-			if (!float.IsNaN(a) && !float.IsNaN(b))
-				return (a * nbA + b * nbB) / (nbA + nbB);
-			else if (float.IsNaN(b))
-				return a;
-			else
-				return b;
-		}
+		public static float Average(float top, int topCount, float bot, int botCount) =>
+			!float.IsNaN(top) && !float.IsNaN(bot) ? (top * topCount + bot * botCount) / (topCount + botCount) 
+			: float.IsNaN(bot) ? top
+			: bot;
+	}
+	
+	internal static class Utils
+	{
+		public static System.Random Random { get; } = new();
 
 		public static float[] FloatArrayFromVector(Vector3 v)
 		{
-			return new float[] { v.x, v.y, v.z };
+			return [v.x, v.y, v.z];
 		}
 
 		public static int MaxRawScoreForNumberOfNotes(int noteCount)

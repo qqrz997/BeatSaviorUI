@@ -1,17 +1,18 @@
-﻿using BeatSaberMarkupLanguage.Attributes;
-using BeatSaberMarkupLanguage.Components;
-using BeatSaberMarkupLanguage.ViewControllers;
-using HMUI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BeatSaviorUI.Trackers;
+using BeatSaberMarkupLanguage.Attributes;
+using BeatSaberMarkupLanguage.Components;
+using BeatSaberMarkupLanguage.ViewControllers;
+using BeatSaviorUI.Stats;
+using BeatSaviorUI.Stats.Trackers;
+using HMUI;
 using TMPro;
 using UnityEngine;
 
-namespace BeatSaviorUI
+namespace BeatSaviorUI.UI
 {
-	class ScoreGraphUI : BSMLResourceViewController
+	class ScoreGraphViewController : BSMLResourceViewController
 	{
 		public override string ResourceName => $"{Plugin.Name}.UI.Views.ScoreGraphView.bsml";
 
@@ -31,7 +32,7 @@ namespace BeatSaviorUI
 		private Dictionary<float, float> graph;
 
 		private bool postParseDone = false;
-		private SongData tmpData;
+		private TempTracker tmpData;
 
 		private List<Color> colors = new List<Color>()
 		{
@@ -95,10 +96,10 @@ namespace BeatSaviorUI
 				Refresh(tmpData);
 		}
 
-		public void Refresh(SongData data)
+		public void Refresh(TempTracker tracker)
 		{
 			if (!postParseDone) {
-				tmpData = data;
+				tmpData = tracker;
 				return;
 			}
 
@@ -113,28 +114,27 @@ namespace BeatSaviorUI
 				foreach (Transform t in graphObject.transform)
 					Destroy(t.gameObject);
 
-				List<Note> notes = (data.deepTrackers["noteTracker"] as NoteTracker).notes;
-				graph = (data.trackers["scoreGraphTracker"] as ScoreGraphTracker).graph;
+				graph = tracker.Graph;
 				float lastGraphEntry = -1;
 
 				// That should never happen but some magical things decided to fuck my monkey brain by doing impossible things once in a while and that's freaking annoying
 				if (graph.Count == 0)
 					return;
 
-				GetOffsets(notes);
-				lastSongBeat = Mathf.CeilToInt(data.songDuration);
-				won = (data.trackers["winTracker"] as WinTracker).won;
+				GetOffsets(tracker.Notes);
+				lastSongBeat = Mathf.CeilToInt(tracker.SongInfo.SongDuration);
+				won = tracker.Won;
 				if(!Plugin.fish)
-					titleText.text = data.songName;
+					titleText.text = tracker.SongInfo.SongName;
 				else
 				{
-					titleText.text = uCute[Utils.random.Next(uCute.Count)];
-					titleText.color = colors[Utils.random.Next(colors.Count)];
+					titleText.text = uCute[Utils.Random.Next(uCute.Count)];
+					titleText.color = colors[Utils.Random.Next(colors.Count)];
 				}
 				titleText.enableAutoSizing = true;
 				titleText.fontSizeMin = 1;
 				titleText.fontSizeMax = 10;
-				modifiersMultiplier = (data.trackers["scoreTracker"] as ScoreTracker).modifiersMultiplier;
+				modifiersMultiplier = tracker.ModifiersMultiplier;
 
 				CreateHorizontalLabels();
 

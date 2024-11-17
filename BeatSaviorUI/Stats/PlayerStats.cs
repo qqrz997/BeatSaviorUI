@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using System.Linq;
+﻿using System.Linq;
+using Newtonsoft.Json;
 using UnityEngine;
 
-namespace BeatSaviorUI
+namespace BeatSaviorUI.Stats
 {
 	class SerializableColor
 	{
