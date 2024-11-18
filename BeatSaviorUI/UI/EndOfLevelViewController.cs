@@ -233,9 +233,9 @@ namespace BeatSaviorUI.UI
             {
                 rank.text = tracker.Rank;
                 percent.text = (tracker.ModifiedRatio * 100).ToString("F") + " %";
-                combo.text = tracker.MaxCombo.ToString();
+                combo.text = tracker.PlayData.MaxCombo.ToString();
                 miss.text = tracker.FullCombo ? "FC" : tracker.ComboBreaks.ToString();
-                pauses.text = config.HidePauseCount ? "-" : tracker.PauseCount.ToString();
+                pauses.text = config.HidePauseCount ? "-" : tracker.PlayData.PauseCount.ToString();
             }
             else
             {
@@ -261,7 +261,6 @@ namespace BeatSaviorUI.UI
             StartCoroutine(AnimateCircle(leftCircleImg, GetCircleFillRatio(tracker.AccLeft), 1.5f));
             StartCoroutine(AnimateCircle(rightCircleImg, GetCircleFillRatio(tracker.AccRight), 1.5f));
 
-            Plugin.Log.Info($"left {tracker.AccLeft} right {tracker.AccRight}");
             leftAverage.text = tracker.AccLeft.ToString("0.##");
             rightAverage.text = tracker.AccRight.ToString("0.##");
             

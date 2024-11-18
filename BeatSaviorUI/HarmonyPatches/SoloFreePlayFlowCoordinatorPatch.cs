@@ -27,7 +27,7 @@ namespace BeatSaviorUI.HarmonyPatches
 			}
 
 			// Show end of song UI
-			Plugin.Log.Info("Showing level results view controller");
+			Plugin.Log.Debug($"Showing {nameof(ResultsViewController)}");
 			
 			__instance.SetLeftScreenViewController(EndOfLevelViewController, ViewController.AnimationType.None);
 			__instance.SetRightScreenViewController(ScoreGraphViewController, ViewController.AnimationType.None);

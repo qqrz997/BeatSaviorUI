@@ -121,7 +121,7 @@ namespace BeatSaviorUI.UI
 				if (graph.Count == 0)
 					return;
 
-				GetOffsets(tracker.Notes);
+				GetOffsets(tracker.PlayData.Notes);
 				lastSongBeat = Mathf.CeilToInt(tracker.SongInfo.SongDuration);
 				won = tracker.Won;
 				if(!Plugin.Fish)
@@ -153,9 +153,7 @@ namespace BeatSaviorUI.UI
 			} 
 			catch (Exception e)
 			{
-				Plugin.Log.Error("The graph just crashed, most likely for some unknow magical reasons.\n");
-				Plugin.Log.Error(e.Message);
-				Plugin.Log.Error(e.StackTrace);
+				Plugin.Log.Error(e);
 			}
 		} 
 

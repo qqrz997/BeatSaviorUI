@@ -65,15 +65,9 @@ internal class NoteDataCollector : IInitializable, IDisposable
 		    maxCombo = combo;
 	    }
 
-	    Tracker = new(
-	        levelCompletionResults,
-	        notes,
-	        maxCombo,
-	        bombHitCount,
-	        pauseCount,
-	        wallHitCount,
-	        standardLevelScenesTransitionSetupData.beatmapKey,
-	        PlayerDataModel.playerData);
+	    var playData = new PlayData(notes, maxCombo, bombHitCount, pauseCount, wallHitCount);
+	    
+	    Tracker = new(levelCompletionResults, playData, PlayerDataModel.playerData);
     }
     
     private void OnScoringForNoteStarted(ScoringElement scoringElement)
@@ -126,7 +120,6 @@ internal class NoteDataCollector : IInitializable, IDisposable
 
     private void ComputeMultiplier(bool goodHit)
     {
-	    Plugin.Log.Info("Calculating multiplier");
     	if(!goodHit)
     	{
     		if (combo > maxCombo)

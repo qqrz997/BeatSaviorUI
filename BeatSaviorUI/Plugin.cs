@@ -10,8 +10,7 @@ using IPALogger = IPA.Logging.Logger;
 
 namespace BeatSaviorUI
 {
-	[UsedImplicitly]
-	[Plugin(RuntimeOptions.SingleStartInit), NoEnableDisable]
+	[Plugin(RuntimeOptions.SingleStartInit), NoEnableDisable, UsedImplicitly]
 	internal class Plugin
 	{
 		public static string Name => nameof(BeatSaviorUI);

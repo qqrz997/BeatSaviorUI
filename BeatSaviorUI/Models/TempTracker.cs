@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace BeatSaviorUI.Models;
 
-public class TempTracker
+internal class TempTracker
 {
     public int RawScore { get; }
     public int Score { get; }
@@ -18,7 +18,6 @@ public class TempTracker
     public bool Won { get; }
     public string Rank { get; }
     public float EndTime { get; }
-    public int PauseCount { get; }
     
     public Dictionary<float, float> Graph { get; } = [];
     
@@ -42,11 +41,9 @@ public class TempTracker
     private int CutRight { get; }
     private int CutLeft { get; }
 
+    
     public int LeftNoteHitCount { get; }
     public int RightNoteHitCount { get; }
-    public int BombHitCount { get; }
-    public int WallHitCount { get; }
-    public int MaxCombo { get; }
 
     public int ComboBreaks { get; }
     public int Misses { get; }
@@ -55,22 +52,17 @@ public class TempTracker
     public int LeftBadCuts { get; }
     public int RightMisses { get; }
     public int RightBadCuts { get; }
-
-    public List<Note> Notes { get; }
     
+    public PlayData PlayData { get; }
     public SongInfo SongInfo { get; }
 	
-    public bool FullCombo => ComboBreaks == 0 && BombHitCount == 0 && WallHitCount == 0;
+    public bool FullCombo => ComboBreaks == 0 && PlayData.BombHitCount == 0 && PlayData.WallHitCount == 0;
     
-    public TempTracker(LevelCompletionResults levelCompletionResults, List<Note> notes, int maxCombo, int bombHitCount, int pauseCount, int wallHitCount, BeatmapKey beatmapKey, PlayerData playerData)
+    public TempTracker(LevelCompletionResults levelCompletionResults, PlayData playData, PlayerData playerData)
     {
-	    Notes = notes;
-        MaxCombo = maxCombo;
-        BombHitCount = bombHitCount;
-        PauseCount = pauseCount;
-        WallHitCount = wallHitCount;
+	    PlayData = playData;
         
-        foreach(var note in Notes)
+        foreach(var note in PlayData.Notes)
         {
             if (note.IsAMiss)
             {
@@ -104,15 +96,15 @@ public class TempTracker
         Rank = RankModel.GetRankName(levelCompletionResults.rank);
 
         ModifiersMultiplier = GetTotalMultiplier(playerData.gameplayModifiers, levelCompletionResults.energy);
-        RawScore = Notes.Select(note => note.TotalScore).Sum();
+        RawScore = PlayData.Notes.Select(note => note.TotalScore).Sum();
         Score = Mathf.RoundToInt(RawScore * ModifiersMultiplier);
-        ModifiedRatio = Score / (float)Utils.MaxRawScoreForNumberOfNotes(Notes.Count);
+        ModifiedRatio = Score / (float)Utils.MaxRawScoreForNumberOfNotes(PlayData.Notes.Count);
 
         var rawGraph = new Dictionary<float, float>();
         var lastGraphNodes = new Queue<float>();
         int actualScore = 0, maxScore1 = 0, multiplier = 1, multiplierProgress = 0, lastBeat = 0;
         
-        foreach(var note in Notes)
+        foreach(var note in PlayData.Notes)
 		{
 			actualScore += note.TotalScore;
 
