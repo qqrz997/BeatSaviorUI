@@ -153,7 +153,7 @@ internal class PlayData
 
         if (gameplayModifiers.disappearingArrows)
         {
-	        multiplier += 0.02f;
+	        multiplier += 0.07f;
 	        // Modifiers.Add("DA");
         }
 
@@ -169,25 +169,25 @@ internal class PlayData
 
         if (gameplayModifiers.ghostNotes)
         {
-	        multiplier += 0.04f;
+	        multiplier += 0.11f;
 	        // Modifiers.Add("GN");
         }
 
         if (gameplayModifiers.noArrows)
         {
-	        multiplier -= 0.3f;
+	        multiplier -= 0.30f;
 	        // Modifiers.Add("NA");
         }
 
         if (gameplayModifiers.noBombs)
         {
-	        multiplier -= 0.1f;
+	        multiplier -= 0.10f;
 	        // Modifiers.Add("NB");
         }
 
         if (gameplayModifiers.noFailOn0Energy && energy == 0)
         {
-	        multiplier -= 0.5f;
+	        multiplier -= 0.50f;
 	        // Modifiers.Add("NF");
         }
 
@@ -199,8 +199,8 @@ internal class PlayData
 
         if (gameplayModifiers.zenMode)
         {
-	        return 0f;
 	        // Modifiers.Add("ZM");
+	        return 0f;
         }
 
         return multiplier >= 0f ? multiplier : 0f;
