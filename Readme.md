@@ -1,8 +1,6 @@
-# BeatSaviorUI
-
 This is a fork of the Beat Saber plugin BeatSaviorData, which shows various data about your plays in the level results screen. Unlike BeatSaviorData, this does not collect or upload any data externally and is purely about showing more information about your play results.
 
-![BSD screenshot](https://github.com/qqrz997/BeatSaviorUI/blob/master/ReadmeImage.png?raw=true)
+![BeatSaviorUI-Screenshot](https://github.com/user-attachments/assets/495d090a-1297-4e32-ac1a-d3704e39ce78)
 
 ## Manual Installation
 > [!IMPORTANT]
