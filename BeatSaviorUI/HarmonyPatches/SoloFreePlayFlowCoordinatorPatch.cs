@@ -1,5 +1,4 @@
-﻿using BeatSaviorUI.Stats;
-using BeatSaviorUI.UI;
+﻿using BeatSaviorUI.UI;
 using HMUI;
 using JetBrains.Annotations;
 using SiraUtil.Affinity;
@@ -32,8 +31,8 @@ namespace BeatSaviorUI.HarmonyPatches
 			__instance.SetLeftScreenViewController(EndOfLevelViewController, ViewController.AnimationType.None);
 			__instance.SetRightScreenViewController(ScoreGraphViewController, ViewController.AnimationType.None);
 			
-			EndOfLevelViewController.Refresh(NoteDataCollector.Tracker, beatmapLevel);
-			ScoreGraphViewController.Refresh(NoteDataCollector.Tracker);
+			EndOfLevelViewController.Refresh(PluginConfig.LastKnownPlayData, beatmapLevel);
+			ScoreGraphViewController.Refresh(PluginConfig.LastKnownPlayData);
 		}
 	}
 }

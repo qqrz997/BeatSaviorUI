@@ -1,4 +1,4 @@
-namespace BeatSaviorUI.Stats;
+namespace BeatSaviorUI.Models;
 
 public enum SongDataType
 {

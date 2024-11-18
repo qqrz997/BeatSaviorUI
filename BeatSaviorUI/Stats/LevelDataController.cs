@@ -1,32 +1,36 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using BeatSaviorUI.Models;
+using HarmonyLib;
 using JetBrains.Annotations;
 using Zenject;
 
 namespace BeatSaviorUI.Stats;
 
 [UsedImplicitly]
-internal class NoteDataCollector : IInitializable, IDisposable
+internal class LevelDataController : IInitializable, IDisposable
 {
     private StandardLevelScenesTransitionSetupDataSO StandardLevelScenesTransitionSetupData { get; }
     private BeatmapObjectManager BeatmapObjectManager { get; }
     private ScoreController ScoreController { get; }
     private PlayerHeadAndObstacleInteraction PlayerHeadAndObstacleInteraction { get; }
     private PauseController PauseController { get; }
-    private PlayerDataModel PlayerDataModel { get; }
+    private GameplayCoreSceneSetupData GameplayCoreSceneSetupData { get; }
+    private AudioTimeSyncController AudioTimeSyncController { get; }
 
-    public NoteDataCollector(StandardLevelScenesTransitionSetupDataSO standardLevelScenesTransitionSetupData, BeatmapObjectManager beatmapObjectManager, PlayerHeadAndObstacleInteraction playerHeadAndObstacleInteraction, ScoreController scoreController, PauseController pauseController, PlayerDataModel playerDataModel)
+    public LevelDataController(StandardLevelScenesTransitionSetupDataSO standardLevelScenesTransitionSetupData, BeatmapObjectManager beatmapObjectManager, PlayerHeadAndObstacleInteraction playerHeadAndObstacleInteraction, ScoreController scoreController, PauseController pauseController, GameplayCoreSceneSetupData gameplayCoreSceneSetupData, AudioTimeSyncController audioTimeSyncController)
     {
         StandardLevelScenesTransitionSetupData = standardLevelScenesTransitionSetupData;
         BeatmapObjectManager = beatmapObjectManager;
         PlayerHeadAndObstacleInteraction = playerHeadAndObstacleInteraction;
         ScoreController = scoreController;
         PauseController = pauseController;
-        PlayerDataModel = playerDataModel;
+        GameplayCoreSceneSetupData = gameplayCoreSceneSetupData;
+        AudioTimeSyncController = audioTimeSyncController;
     }
     
-    public static TempTracker Tracker { get; private set; }
+    private readonly bool scoreSaberPlaybackEnabled = AccessTools.Method("ScoreSaber.Core.ReplaySystem.HarmonyPatches.PatchHandleHMDUnmounted:Prefix") != null;	
     
     private int combo;
     private int multiplier = 1;
@@ -65,9 +69,42 @@ internal class NoteDataCollector : IInitializable, IDisposable
 		    maxCombo = combo;
 	    }
 
-	    var playData = new PlayData(notes, maxCombo, bombHitCount, pauseCount, wallHitCount);
+	    var playData = new CompletionResultsExtraData(notes, maxCombo, bombHitCount, pauseCount, wallHitCount);
+	    var beatmapInfo = GetBeatmapInfo();
 	    
-	    Tracker = new(levelCompletionResults, playData, PlayerDataModel.playerData);
+	    PluginConfig.LastKnownPlayData = new(levelCompletionResults, playData, beatmapInfo);
+    }
+
+    private BeatmapInfo GetBeatmapInfo()
+    {
+	    string songID = GameplayCoreSceneSetupData.beatmapKey.levelId.Replace("custom_level_","").Split('_')[0];
+	    string songDifficulty = GameplayCoreSceneSetupData.beatmapKey.difficulty.ToString().ToLower();
+	    string gameMode = GameplayCoreSceneSetupData.beatmapKey.beatmapCharacteristic.serializedName;
+
+	    int songDifficultyRank = GameplayCoreSceneSetupData.beatmapKey.beatmapCharacteristic.sortingOrder;
+	    string songName = GameplayCoreSceneSetupData.beatmapLevel.songName;
+	    string songArtist = GameplayCoreSceneSetupData.beatmapLevel.songAuthorName;
+	    string songMapper = GameplayCoreSceneSetupData.beatmapLevel.allMappers.FirstOrDefault() ?? "Unknown";
+
+	    float songDuration = AudioTimeSyncController.songLength;
+
+	    SongDataType songDataType;
+	    float songSpeed = 1;
+	    float songStartTime = 0;
+	    if (GameplayCoreSceneSetupData.practiceSettings != null) {
+		    songDataType = SongDataType.Practice;
+		    songSpeed = GameplayCoreSceneSetupData.practiceSettings.songSpeedMul;
+		    songStartTime = GameplayCoreSceneSetupData.practiceSettings.startSongTime;
+	    }
+	    else
+	    {
+		    songDataType = scoreSaberPlaybackEnabled ? SongDataType.Replay : SongDataType.None;
+	    }
+
+	    float songJumpDistance = GameplayCoreSceneSetupData.beatmapBasicData.noteJumpStartBeatOffset;
+
+	    return new(songDataType, songID, songDifficulty, songName, songArtist, songMapper, gameMode, songDifficultyRank,
+		    songSpeed, songDuration, songJumpDistance);
     }
     
     private void OnScoringForNoteStarted(ScoringElement scoringElement)

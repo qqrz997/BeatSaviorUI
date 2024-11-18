@@ -9,7 +9,6 @@ internal class PlayerInstaller : Installer
 {
     public override void InstallBindings()
     {
-        Container.BindInterfacesTo<SongData>().AsSingle().NonLazy();
-        Container.BindInterfacesTo<NoteDataCollector>().AsSingle();
+        Container.BindInterfacesTo<LevelDataController>().AsSingle();
     }
 }

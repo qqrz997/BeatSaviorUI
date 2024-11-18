@@ -80,7 +80,7 @@ namespace BeatSaviorUI.UI
 
         public override string ResourceName => $"{Plugin.Name}.UI.Views.EndOfLevelView.bsml";
         private bool postParseDone;
-        private TempTracker tempTracker;
+        private PlayData playData;
         private BeatmapLevel tempBeatmapLevel;
         private ImageView songCoverImg, upperBandImg, lowerBandImg, leftCircleImg, rightCircleImg;
 
@@ -206,26 +206,26 @@ namespace BeatSaviorUI.UI
             rightAfterSwing.overflowMode = TextOverflowModes.Overflow;
 
             postParseDone = true;
-            if(tempTracker != null && tempBeatmapLevel != null)
-                Refresh(tempTracker, tempBeatmapLevel);
+            if(playData != null && tempBeatmapLevel != null)
+                Refresh(playData, tempBeatmapLevel);
         }
 
-        public void Refresh(TempTracker tracker, BeatmapLevel beatmapLevel)
+        public void Refresh(PlayData tracker, BeatmapLevel beatmapLevel)
         {
             if (!postParseDone) {
-                tempTracker = tracker;
+                playData = tracker;
                 tempBeatmapLevel = beatmapLevel;
                 return;
             }
 
             songCoverImg.sprite = beatmapLevel.previewMediaData.GetCoverSpriteAsync().Result;
             
-            title.text = tracker.SongInfo.SongName;
-            artist.text = tracker.SongInfo.SongArtist;
-            mapper.text = tracker.SongInfo.SongMapper;
+            title.text = tracker.BeatmapInfo.SongName;
+            artist.text = tracker.BeatmapInfo.SongArtist;
+            mapper.text = tracker.BeatmapInfo.SongMapper;
 
-            difficulty.text = FormatSongDifficulty(tracker.SongInfo.SongDifficulty);
-            difficulty.color = SetColorBasedOnDifficulty(tracker.SongInfo.SongDifficulty);
+            difficulty.text = FormatSongDifficulty(tracker.BeatmapInfo.SongDifficulty);
+            difficulty.color = SetColorBasedOnDifficulty(tracker.BeatmapInfo.SongDifficulty);
 
             // ReSharper disable RedundantLogicalConditionalExpressionOperand
             // ReSharper disable once RedundantBoolCompare
@@ -233,9 +233,9 @@ namespace BeatSaviorUI.UI
             {
                 rank.text = tracker.Rank;
                 percent.text = (tracker.ModifiedRatio * 100).ToString("F") + " %";
-                combo.text = tracker.PlayData.MaxCombo.ToString();
+                combo.text = tracker.CompletionResultsExtraData.MaxCombo.ToString();
                 miss.text = tracker.FullCombo ? "FC" : tracker.ComboBreaks.ToString();
-                pauses.text = config.HidePauseCount ? "-" : tracker.PlayData.PauseCount.ToString();
+                pauses.text = config.HidePauseCount ? "-" : tracker.CompletionResultsExtraData.PauseCount.ToString();
             }
             else
             {

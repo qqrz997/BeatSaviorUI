@@ -32,7 +32,7 @@ namespace BeatSaviorUI.UI
 		private Dictionary<float, float> graph;
 
 		private bool postParseDone;
-		private TempTracker tmpData;
+		private PlayData tmpData;
 
 		private List<Color> Colors { get; } =
 		[
@@ -96,7 +96,7 @@ namespace BeatSaviorUI.UI
 				Refresh(tmpData);
 		}
 
-		public void Refresh(TempTracker tracker)
+		public void Refresh(PlayData tracker)
 		{
 			if (!postParseDone) {
 				tmpData = tracker;
@@ -121,12 +121,12 @@ namespace BeatSaviorUI.UI
 				if (graph.Count == 0)
 					return;
 
-				GetOffsets(tracker.PlayData.Notes);
-				lastSongBeat = Mathf.CeilToInt(tracker.SongInfo.SongDuration);
+				GetOffsets(tracker.CompletionResultsExtraData.Notes);
+				lastSongBeat = Mathf.CeilToInt(tracker.BeatmapInfo.SongDuration);
 				won = tracker.Won;
 				if(!Plugin.Fish)
 				{
-					titleText.text = tracker.SongInfo.SongName;
+					titleText.text = tracker.BeatmapInfo.SongName;
 				}
 				else
 				{

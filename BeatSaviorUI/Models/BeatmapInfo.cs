@@ -1,6 +1,6 @@
-namespace BeatSaviorUI.Stats;
+namespace BeatSaviorUI.Models;
 
-public record SongInfo(
+public record BeatmapInfo(
     SongDataType SongDataType,
     string SongID,
     string SongDifficulty,
