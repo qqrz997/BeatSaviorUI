@@ -37,7 +37,7 @@ internal class LevelDataController : IInitializable, IDisposable
     private int multiplierProgress;
     
     private readonly List<Note> notes = [];
-    private int maxCombo = 69;
+    private int maxCombo;
     private int bombHitCount;
     private int pauseCount;
     private int wallHitCount;
@@ -116,7 +116,7 @@ internal class LevelDataController : IInitializable, IDisposable
 
 	    var noteCutInfo = goodCut.cutScoreBuffer.noteCutInfo;
 
-	    if (!IsGoodCut(in noteCutInfo))
+	    if (!noteCutInfo.allIsOK || goodCut.noteData.colorType == ColorType.None)
 	    {
 		    return;
 	    }

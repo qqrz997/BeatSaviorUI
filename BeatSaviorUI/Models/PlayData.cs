@@ -41,11 +41,12 @@ internal class PlayData
 	    BeatmapInfo = beatmapInfo;
         
         Won = levelCompletionResults.levelEndStateType == LevelCompletionResults.LevelEndStateType.Cleared;
-		FullCombo = levelCompletionResults.fullCombo;
+        FullCombo = levelCompletionResults.fullCombo;
 		
         Rank = RankModel.GetRankName(levelCompletionResults.rank);
         ModifiersMultiplier = GetTotalMultiplier(levelCompletionResults.gameplayModifiers, levelCompletionResults.energy);
-        ModifiedRatio = levelCompletionResults.multipliedScore / (float)levelCompletionResults.modifiedScore;
+        ModifiedRatio = SafeMath.Divide(levelCompletionResults.modifiedScore, 
+										Utils.MaxRawScoreForNumberOfNotes(CompletionResultsExtraData.Notes.Count));
         
         var rawGraph = new Dictionary<float, float>();
         var lastGraphNodes = new Queue<float>();

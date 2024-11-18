@@ -6,11 +6,6 @@ namespace BeatSaviorUI.Utilities
 	{
 		public static System.Random Random { get; } = new();
 
-		public static float[] FloatArrayFromVector(Vector3 v)
-		{
-			return [v.x, v.y, v.z];
-		}
-
 		public static int MaxRawScoreForNumberOfNotes(int noteCount)
 		{
 			int num = 0;
