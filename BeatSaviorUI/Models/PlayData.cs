@@ -8,7 +8,7 @@ namespace BeatSaviorUI.Models;
 internal class PlayData
 {
 	public float ModifiersMultiplier { get; }
-    public float ModifiedRatio { get; }
+    public float ScoreRatio { get; }
 
     public bool Won { get; }
     public string Rank { get; }
@@ -45,7 +45,7 @@ internal class PlayData
 		
         Rank = RankModel.GetRankName(levelCompletionResults.rank);
         ModifiersMultiplier = GetTotalMultiplier(levelCompletionResults.gameplayModifiers, levelCompletionResults.energy);
-        ModifiedRatio = SafeMath.Divide(levelCompletionResults.modifiedScore, 
+        ScoreRatio = SafeMath.Divide(CompletionResultsExtraData.Notes.Select(n => n.TotalScore).Sum(), 
 										Utils.MaxRawScoreForNumberOfNotes(CompletionResultsExtraData.Notes.Count));
         
         var rawGraph = new Dictionary<float, float>();

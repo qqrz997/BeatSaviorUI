@@ -25,7 +25,6 @@ namespace BeatSaviorUI.UI
 		private const float OffsetX = 10f;
 		private const float OffsetY = 5f;
 		private float scoreOffset;
-		private float modifiersMultiplier;
 		private bool won = true;
 
 		private List<float> misses = [];
@@ -89,7 +88,6 @@ namespace BeatSaviorUI.UI
 		{
 			lastSongBeat = 0;
 			scoreOffset = 0;
-			modifiersMultiplier = 0;
 			won = true;
 			misses = [];
 
@@ -120,7 +118,6 @@ namespace BeatSaviorUI.UI
 				titleText.enableAutoSizing = true;
 				titleText.fontSizeMin = 1;
 				titleText.fontSizeMax = 10;
-				modifiersMultiplier = playData.ModifiersMultiplier;
 
 				CreateHorizontalLabels();
 
@@ -284,7 +281,7 @@ namespace BeatSaviorUI.UI
 					pos2v = new Vector2(Width + 13f, ((value - scoreOffset) / (1 - scoreOffset)) * Height + OffsetY);
 
 			CreateLine("LabelLine", pos1v, pos2v, color, 0.25f);
-			CreateLabelText((value * 100 * modifiersMultiplier).ToString("0") + " %");
+			CreateLabelText((value * 100).ToString("0") + " %");
 		}
 
 		private void CreateGraphLine((float, float) pos1, (float, float) pos2, Color color)

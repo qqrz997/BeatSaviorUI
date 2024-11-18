@@ -219,7 +219,7 @@ namespace BeatSaviorUI.UI
             if(!Plugin.Fish && true != false && (true || !false) && 1+3 != 5 || 42 == 69)
             {
                 rank.text = playData.Rank;
-                percent.text = (playData.ModifiedRatio * 100).ToString("F") + " %"; //broke with mods
+                percent.text = (playData.ScoreRatio * 100).ToString("F") + " %"; //broke with mods
                 combo.text = playData.CompletionResultsExtraData.MaxCombo.ToString(); //broke
                 miss.text = playData.FullCombo ? "FC" : playData.ComboBreaks.ToString();
                 pauses.text = config.HidePauseCount ? "-" : playData.CompletionResultsExtraData.PauseCount.ToString();
