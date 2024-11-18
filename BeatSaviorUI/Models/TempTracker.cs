@@ -1,19 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BeatSaviorUI.Stats;
+using BeatSaviorUI.Utilities;
 using UnityEngine;
 
-namespace BeatSaviorUI.Stats.Trackers;
+namespace BeatSaviorUI.Models;
 
 public class TempTracker
 {
     public int RawScore { get; }
     public int Score { get; }
-    public int PersonalBest { get; }
-    public float RawRatio { get; }
     public float ModifiedRatio { get; }
-    public float PersonalBestRawRatio { get; }
-    public float PersonalBestModifiedRatio { get; }
     public float ModifiersMultiplier { get; }
     public List<string> Modifiers { get; } = [];
 
@@ -26,21 +24,16 @@ public class TempTracker
     
     public float AccRight { get; }
     public float AccLeft { get; }
-    public float AverageAcc { get; }
     public float LeftSpeed { get; }
     public float RightSpeed { get; }
-    public float AverageSpeed { get; }
     public float LeftHighestSpeed { get; }
     public float RightHighestSpeed { get; }
     public float LeftPreSwing { get; }
     public float RightPreSwing { get; }
-    public float AveragePreSwing { get; }
     public float LeftPostSwing { get; }
     public float RightPostSwing { get; }
-    public float AveragePostSwing { get; }
     public float LeftTimeDependence { get; }
     public float RightTimeDependence { get; }
-    public float AverageTimeDependence { get; }
     public float[] LeftAverageCut { get; } = new float[3];
     public float[] RightAverageCut { get; } = new float[3];
     public float[] AverageCut { get; } = new float[3];
@@ -48,11 +41,6 @@ public class TempTracker
     public int[] GridCut { get; } = new int[12];
     private int CutRight { get; }
     private int CutLeft { get; }
-
-    public float RightSaber { get; }
-    public float LeftSaber { get; }
-    public float RightHand { get; }
-    public float LeftHand { get; }
 
     public int LeftNoteHitCount { get; }
     public int RightNoteHitCount { get; }
@@ -84,21 +72,21 @@ public class TempTracker
         
         foreach(var note in Notes)
         {
-            if (note.IsAMiss())
+            if (note.IsAMiss)
             {
                 ComboBreaks++;
-                if (note.cutType == CutType.miss)
+                if (note.CutType == CutType.Miss)
                 {
                     Misses++;
-                    if (note.noteType == BSDNoteType.left)
+                    if (note.ColorType == ColorType.ColorA)
                         LeftMisses++;
                     else
                         RightMisses++;
                 }
-                else if (note.cutType == CutType.badCut)
+                else if (note.CutType == CutType.BadCut)
                 {
                     BadCuts++;
-                    if (note.GetInfo().saberType == SaberType.SaberA)
+                    if (note.NoteCutInfo.saberType == SaberType.SaberA)
                         LeftBadCuts++;
                     else
                         RightBadCuts++;
@@ -106,30 +94,19 @@ public class TempTracker
             }
             else
             {
-	            if (note.noteType == BSDNoteType.left) LeftNoteHitCount++;
-	            else if (note.noteType == BSDNoteType.right) RightNoteHitCount++;
+	            if (note.ColorType == ColorType.ColorA) LeftNoteHitCount++;
+	            else if (note.ColorType == ColorType.ColorB) RightNoteHitCount++;
             }
         }
         
         Won = levelCompletionResults.levelEndStateType == LevelCompletionResults.LevelEndStateType.Cleared;
         EndTime = levelCompletionResults.endSongTime;
         Rank = RankModel.GetRankName(levelCompletionResults.rank);
-        
-        var playerLevelStatsData = playerData.TryGetPlayerLevelStatsData(in beatmapKey);
-        int maxRawScore = Utils.MaxRawScoreForNumberOfNotes(Notes.Count);
-        int maxScore = Mathf.RoundToInt(maxRawScore * ModifiersMultiplier);
 
         ModifiersMultiplier = GetTotalMultiplier(playerData.gameplayModifiers, levelCompletionResults.energy);
-        PersonalBestModifiedRatio = playerLevelStatsData.highScore / (float)maxScore;
-        PersonalBestRawRatio = playerLevelStatsData.highScore / (float)maxRawScore;
-        PersonalBest = playerLevelStatsData.highScore;
-
-        RawScore = Notes.Select(note => note.GetTotalScore()).Sum();
-
+        RawScore = Notes.Select(note => note.TotalScore).Sum();
         Score = Mathf.RoundToInt(RawScore * ModifiersMultiplier);
-
-        ModifiedRatio = Score / (float)maxRawScore;
-        RawRatio = RawScore / (float)maxRawScore;
+        ModifiedRatio = Score / (float)Utils.MaxRawScoreForNumberOfNotes(Notes.Count);
 
         var rawGraph = new Dictionary<float, float>();
         var lastGraphNodes = new Queue<float>();
@@ -137,7 +114,7 @@ public class TempTracker
         
         foreach(var note in Notes)
 		{
-			actualScore += note.GetTotalScore();
+			actualScore += note.TotalScore;
 
 			if (multiplier < 8)
 			{
@@ -151,55 +128,56 @@ public class TempTracker
 
 			maxScore1 += 115 * multiplier;
 
-			if (Math.Truncate(note.time) > lastBeat)
+			float noteBeat = MathF.Truncate(note.Time);
+			if (noteBeat > lastBeat)
 			{
-				rawGraph.Add((float) Math.Truncate(note.time), (float) actualScore / (float) maxScore1);
-				lastBeat = (int) Math.Truncate(note.time);
+				rawGraph.Add(noteBeat, (float) actualScore / maxScore1);
+				lastBeat = (int) noteBeat;
 			}
 
-			if (note.IsAMiss())
+			if (note.IsAMiss)
 			{
 				continue;
 			}
 			 
-			int acc = note.score[0] + note.score[1] + note.score[2];
+			int acc = note.Score[0] + note.Score[1] + note.Score[2];
 
-			if (note.noteType == BSDNoteType.left)
+			if (note.ColorType == ColorType.ColorA)
 			{
 				CutLeft++;
 				AccLeft += acc;
-				LeftAverageCut[0] += note.score[0];
-				LeftAverageCut[1] += note.score[1];
-				LeftAverageCut[2] += note.score[2];
-				LeftSpeed += note.speed;
-				LeftPreSwing += note.preswing;
-				LeftPostSwing += note.postswing;
-				if (note.speed > LeftHighestSpeed)
-					LeftHighestSpeed = note.speed;
-				LeftTimeDependence += note.timeDependence;
+				LeftAverageCut[0] += note.Score[0];
+				LeftAverageCut[1] += note.Score[1];
+				LeftAverageCut[2] += note.Score[2];
+				LeftSpeed += note.Speed;
+				LeftPreSwing += note.PreSwing;
+				LeftPostSwing += note.PostSwing;
+				if (note.Speed > LeftHighestSpeed)
+					LeftHighestSpeed = note.Speed;
+				LeftTimeDependence += note.TimeDependence;
 			} 
 			else
 			{
 				CutRight++;
 				AccRight += acc;
-				RightAverageCut[0] += note.score[0];
-				RightAverageCut[1] += note.score[1];
-				RightAverageCut[2] += note.score[2];
-				RightSpeed += note.speed;
-				RightPreSwing += note.preswing;
-				RightPostSwing += note.postswing;
-				if (note.speed > RightHighestSpeed)
-					RightHighestSpeed = note.speed;
-				RightTimeDependence += note.timeDependence;
+				RightAverageCut[0] += note.Score[0];
+				RightAverageCut[1] += note.Score[1];
+				RightAverageCut[2] += note.Score[2];
+				RightSpeed += note.Speed;
+				RightPreSwing += note.PreSwing;
+				RightPostSwing += note.PostSwing;
+				if (note.Speed > RightHighestSpeed)
+					RightHighestSpeed = note.Speed;
+				RightTimeDependence += note.TimeDependence;
 			}
 			
-			if (note.index < 0 || note.index >= GridCut.Length) // it's noodle
+			if (note.Index < 0 || note.Index >= GridCut.Length) // it's noodle
 			{
 				continue;
 			}
 
-			GridCut[note.index] += 1;
-			GridAcc[note.index] += acc;
+			GridCut[note.Index] += 1;
+			GridAcc[note.Index] += acc;
 		}
         
 		foreach(var point in rawGraph) {
@@ -224,28 +202,23 @@ public class TempTracker
 			AverageCut[i] = SafeMath.Average(RightAverageCut[i], CutRight, LeftAverageCut[i], CutLeft);
 		}
 
-		AverageAcc = SafeMath.Average(AccRight, CutRight, AccLeft, CutLeft);
+		SafeMath.Average(AccRight, CutRight, AccLeft, CutLeft);
 
-		AverageSpeed = SafeMath.Divide(LeftSpeed + RightSpeed, CutRight + CutLeft);
+		SafeMath.Divide(LeftSpeed + RightSpeed, CutRight + CutLeft);
 		LeftSpeed = SafeMath.Divide(LeftSpeed, CutLeft);
 		RightSpeed = SafeMath.Divide(RightSpeed, CutRight);
 
-		AverageTimeDependence = SafeMath.Divide(LeftTimeDependence + RightTimeDependence, CutRight + CutLeft);
+		SafeMath.Divide(LeftTimeDependence + RightTimeDependence, CutRight + CutLeft);
 		LeftTimeDependence = SafeMath.Divide(LeftTimeDependence, CutLeft);
 		RightTimeDependence = SafeMath.Divide(RightTimeDependence, CutRight);
 
-		AveragePreSwing = SafeMath.Divide(LeftPreSwing + RightPreSwing, CutRight + CutLeft);
+		SafeMath.Divide(LeftPreSwing + RightPreSwing, CutRight + CutLeft);
 		LeftPreSwing = SafeMath.Divide(LeftPreSwing, CutLeft);
 		RightPreSwing = SafeMath.Divide(RightPreSwing, CutRight);
 
-		AveragePostSwing = SafeMath.Divide(LeftPostSwing + RightPostSwing, CutRight + CutLeft);
+		SafeMath.Divide(LeftPostSwing + RightPostSwing, CutRight + CutLeft);
 		LeftPostSwing = SafeMath.Divide(LeftPostSwing, CutLeft);
 		RightPostSwing = SafeMath.Divide(RightPostSwing, CutRight);
-		
-		RightSaber = levelCompletionResults.rightSaberMovementDistance;
-		RightHand = levelCompletionResults.rightHandMovementDistance;
-		LeftSaber = levelCompletionResults.leftSaberMovementDistance;
-		LeftHand = levelCompletionResults.leftHandMovementDistance;
 
 		SongInfo = SongData.SongInfo;
     }

@@ -5,29 +5,6 @@ using Zenject;
 
 namespace BeatSaviorUI.Stats
 {
-	public enum SongDataType
-	{
-		none,
-		pass,
-		fail,
-		practice,
-		replay,
-		campaign
-	}
-
-	public record SongInfo(
-		SongDataType SongDataType,
-		string SongID,
-		string SongDifficulty,
-		string SongName,
-		string SongArtist,
-		string SongMapper,
-		string GameMode,
-		int SongDifficultyRank,
-		float SongSpeed,
-		float SongDuration,
-		float SongJumpDistance);
-	
 	[UsedImplicitly]
 	internal class SongData : IInitializable
 	{
@@ -62,13 +39,13 @@ namespace BeatSaviorUI.Stats
 			float songSpeed = 1;
 			float songStartTime = 0;
 			if (GameplayCoreSceneSetupData.practiceSettings != null) {
-				songDataType = SongDataType.practice;
+				songDataType = SongDataType.Practice;
 				songSpeed = GameplayCoreSceneSetupData.practiceSettings.songSpeedMul;
 				songStartTime = GameplayCoreSceneSetupData.practiceSettings.startSongTime;
 			}
 			else
 			{
-				songDataType = ScoreSaberPlaybackEnabled ? SongDataType.replay : SongDataType.none;
+				songDataType = ScoreSaberPlaybackEnabled ? SongDataType.Replay : SongDataType.None;
 			}
 
 			float songJumpDistance = GameplayCoreSceneSetupData.beatmapBasicData.noteJumpStartBeatOffset;

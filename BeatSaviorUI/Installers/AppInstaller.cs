@@ -1,3 +1,4 @@
+using BeatSaviorUI.HarmonyPatches;
 using JetBrains.Annotations;
 using Zenject;
 
@@ -13,6 +14,7 @@ namespace BeatSaviorUI.Installers
         public override void InstallBindings()
         {
             Container.BindInstance(PluginConfig).AsSingle();
+            Container.BindInterfacesTo<HarmonyPatchController>().AsSingle();
         }
     }
 }

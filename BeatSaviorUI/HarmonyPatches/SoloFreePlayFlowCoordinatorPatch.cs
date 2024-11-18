@@ -27,13 +27,13 @@ namespace BeatSaviorUI.HarmonyPatches
 			}
 
 			// Show end of song UI
-			Logger.log.Info("Showing level results view controller");
+			Plugin.Log.Info("Showing level results view controller");
 			
 			__instance.SetLeftScreenViewController(EndOfLevelViewController, ViewController.AnimationType.None);
 			__instance.SetRightScreenViewController(ScoreGraphViewController, ViewController.AnimationType.None);
 			
-			EndOfLevelViewController.Refresh(SongDataManager.Tracker, beatmapLevel);
-			ScoreGraphViewController.Refresh(SongDataManager.Tracker);
+			EndOfLevelViewController.Refresh(NoteDataCollector.Tracker, beatmapLevel);
+			ScoreGraphViewController.Refresh(NoteDataCollector.Tracker);
 		}
 	}
 }

@@ -4,54 +4,54 @@ using System.Linq;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.ViewControllers;
-using BeatSaviorUI.Stats;
-using BeatSaviorUI.Stats.Trackers;
+using BeatSaviorUI.Models;
+using BeatSaviorUI.Utilities;
 using HMUI;
 using TMPro;
 using UnityEngine;
 
 namespace BeatSaviorUI.UI
 {
-	class ScoreGraphViewController : BSMLResourceViewController
+	internal class ScoreGraphViewController : BSMLResourceViewController
 	{
 		public override string ResourceName => $"{Plugin.Name}.UI.Views.ScoreGraphView.bsml";
 
-		#pragma warning disable 0649    // Disables the "never assigned" warning
-		[UIObject("graph")]
-		private readonly GameObject graphObject;
-
-		[UIComponent("title")]
-		private readonly CurvedTextMeshPro titleText;
-		#pragma warning restore 0649
+		[UIObject("graph")] private readonly GameObject graphObject = null!;
+		[UIComponent("title")] private readonly CurvedTextMeshPro titleText = null!;
 
 		private int lastSongBeat = 0;
-		private float width = 90, height = 45, offsetx = 10f, offsety = 5f, scoreOffset, modifiersMultiplier;
+		private const float Width = 90;
+		private const float Height = 45;
+		private const float OffsetX = 10f;
+		private const float OffsetY = 5f;
+		private float scoreOffset;
+		private float modifiersMultiplier;
 		private bool won = true;
 
-		private List<float> misses = new List<float>();
+		private List<float> misses = [];
 		private Dictionary<float, float> graph;
 
-		private bool postParseDone = false;
+		private bool postParseDone;
 		private TempTracker tmpData;
 
-		private List<Color> colors = new List<Color>()
-		{
+		private List<Color> Colors { get; } =
+		[
 			Color.yellow,
 			new Color(1, 0.5f, 0, 1), // Orange
 			Color.red,
-			new Color(1, 0, 0.5f, 1),	// Dark pink
+			new Color(1, 0, 0.5f, 1), // Dark pink
 			Color.magenta,
-			new Color(0.5f, 0, 1, 1),	// Purple
+			new Color(0.5f, 0, 1, 1), // Purple
 			Color.blue,
-			new Color(0, 0.5f, 1),	// Light blue
+			new Color(0, 0.5f, 1), // Light blue
 			Color.cyan,
 			new Color(0, 1, 0.5f), // Blue-green
 			Color.green,
-			new Color(0.5f, 1, 0)	// Light green
-		};
+			new Color(0.5f, 1, 0)
+		];
 
-		private List<string> uCute = new List<string>()
-		{
+		private List<string> uCute { get; } =
+		[
 			"You are awesome. Keep going !",
 			"Smile ! You are beautiful <3",
 			"You're not Mystogan#5049, but you're still awesome ! (Whoever that guy is)",
@@ -86,7 +86,7 @@ namespace BeatSaviorUI.UI
 			"You can cut notes but you'll never break my heart <3",
 			"Duck.",
 			"Duck plushies are the best plushies."
-		};
+		];
 
 		[UIAction("#post-parse")]
 		public void PostParse()
@@ -107,7 +107,7 @@ namespace BeatSaviorUI.UI
 			scoreOffset = 0;
 			modifiersMultiplier = 0;
 			won = true;
-			misses = new List<float>();
+			misses = [];
 
 			try
 			{
@@ -124,12 +124,14 @@ namespace BeatSaviorUI.UI
 				GetOffsets(tracker.Notes);
 				lastSongBeat = Mathf.CeilToInt(tracker.SongInfo.SongDuration);
 				won = tracker.Won;
-				if(!Plugin.fish)
+				if(!Plugin.Fish)
+				{
 					titleText.text = tracker.SongInfo.SongName;
+				}
 				else
 				{
 					titleText.text = uCute[Utils.Random.Next(uCute.Count)];
-					titleText.color = colors[Utils.Random.Next(colors.Count)];
+					titleText.color = Colors[Utils.Random.Next(Colors.Count)];
 				}
 				titleText.enableAutoSizing = true;
 				titleText.fontSizeMin = 1;
@@ -148,12 +150,12 @@ namespace BeatSaviorUI.UI
 				}
 
 				CreateVerticalLabels();
-			} catch (Exception e)
+			} 
+			catch (Exception e)
 			{
-				// Sometimes it gets in the graph without calling the graph. Or something. I have no god damn idea what happens in those 1/10000000 cases. Still, that catch *should* avoid the whole game to crash.
-				Logger.log.Error("The graph just crashed, most likely for some unknow magical reasons.\n");
-				Logger.log.Error(e.Message);
-				Logger.log.Error(e.StackTrace);
+				Plugin.Log.Error("The graph just crashed, most likely for some unknow magical reasons.\n");
+				Plugin.Log.Error(e.Message);
+				Plugin.Log.Error(e.StackTrace);
 			}
 		} 
 
@@ -265,11 +267,11 @@ namespace BeatSaviorUI.UI
 				rt.anchorMin = Vector2.zero;
 				rt.anchorMax = Vector2.zero;
 				rt.sizeDelta = new Vector2(12, 10);
-				rt.anchoredPosition = new Vector2((x / lastSongBeat) * width + offsetx, -2f);
+				rt.anchoredPosition = new Vector2((x / lastSongBeat) * Width + OffsetX, -2f);
 			}
 
-			Vector2 pos1v = new Vector2((x / lastSongBeat) * width + offsetx, 3f),
-					pos2v = new Vector2((x / lastSongBeat) * width + offsetx, ((y - scoreOffset) / (1 - scoreOffset)) * height + offsety - 2f);
+			Vector2 pos1v = new Vector2((x / lastSongBeat) * Width + OffsetX, 3f),
+					pos2v = new Vector2((x / lastSongBeat) * Width + OffsetX, ((y - scoreOffset) / (1 - scoreOffset)) * Height + OffsetY - 2f);
 
 			CreateLine("LabelLine", pos1v, pos2v, color, 0.1f);
 			CreateLabelText(text + " at " + $"{Math.Floor(x / 60):N0}:{Math.Floor(x % 60):00}");
@@ -293,11 +295,11 @@ namespace BeatSaviorUI.UI
 				rt.anchorMax = Vector2.zero;
 				rt.pivot = new Vector2(0, 1);
 				rt.sizeDelta = new Vector2(10, 5);
-				rt.anchoredPosition = new Vector2(3f, ((value - scoreOffset) / (1 - scoreOffset)) * height + offsety);
+				rt.anchoredPosition = new Vector2(3f, ((value - scoreOffset) / (1 - scoreOffset)) * Height + OffsetY);
 			}
 
-			Vector2 pos1v = new Vector2(4f, ((value - scoreOffset) / (1 - scoreOffset)) * height + offsety),
-					pos2v = new Vector2(width + 13f, ((value - scoreOffset) / (1 - scoreOffset)) * height + offsety);
+			Vector2 pos1v = new Vector2(4f, ((value - scoreOffset) / (1 - scoreOffset)) * Height + OffsetY),
+					pos2v = new Vector2(Width + 13f, ((value - scoreOffset) / (1 - scoreOffset)) * Height + OffsetY);
 
 			CreateLine("LabelLine", pos1v, pos2v, color, 0.25f);
 			CreateLabelText((value * 100 * modifiersMultiplier).ToString("0") + " %");
@@ -305,8 +307,8 @@ namespace BeatSaviorUI.UI
 
 		private void CreateGraphLine((float, float) pos1, (float, float) pos2, Color color)
 		{
-			Vector2 pos1v = new Vector2((pos1.Item1 / lastSongBeat) * width + offsetx, ((pos1.Item2 - scoreOffset) / (1 - scoreOffset)) * height + offsety),
-					pos2v = new Vector2((pos2.Item1 / lastSongBeat) * width + offsetx, ((pos2.Item2 - scoreOffset) / (1 - scoreOffset)) * height + offsety);
+			Vector2 pos1v = new Vector2((pos1.Item1 / lastSongBeat) * Width + OffsetX, ((pos1.Item2 - scoreOffset) / (1 - scoreOffset)) * Height + OffsetY),
+					pos2v = new Vector2((pos2.Item1 / lastSongBeat) * Width + OffsetX, ((pos2.Item2 - scoreOffset) / (1 - scoreOffset)) * Height + OffsetY);
 
 			CreateLine("GraphLine", pos1v, pos2v, color, 0.75f);
 		}
@@ -337,8 +339,8 @@ namespace BeatSaviorUI.UI
 		{
 			foreach (Note n in notes)
 			{
-				if (n.IsAMiss() && misses.Count < 4)
-					misses.Add((float)Math.Truncate(n.time));
+				if (n.IsAMiss && misses.Count < 4)
+					misses.Add((float)Math.Truncate(n.Time));
 			}
 
 			scoreOffset = graph.Min(e => e.Value);

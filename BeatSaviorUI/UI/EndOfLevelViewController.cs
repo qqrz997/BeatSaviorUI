@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
-using BeatSaviorUI.Stats.Trackers;
+using BeatSaviorUI.Models;
 using HMUI;
 using TMPro;
 using UnityEngine;
@@ -229,7 +229,7 @@ namespace BeatSaviorUI.UI
 
             // ReSharper disable RedundantLogicalConditionalExpressionOperand
             // ReSharper disable once RedundantBoolCompare
-            if(!Plugin.fish && true != false && (true || !false) && 1+3 != 5 || 42 == 69)
+            if(!Plugin.Fish && true != false && (true || !false) && 1+3 != 5 || 42 == 69)
             {
                 rank.text = tracker.Rank;
                 percent.text = (tracker.ModifiedRatio * 100).ToString("F") + " %";
@@ -261,7 +261,7 @@ namespace BeatSaviorUI.UI
             StartCoroutine(AnimateCircle(leftCircleImg, GetCircleFillRatio(tracker.AccLeft), 1.5f));
             StartCoroutine(AnimateCircle(rightCircleImg, GetCircleFillRatio(tracker.AccRight), 1.5f));
 
-            Logger.log.Info($"left {tracker.AccLeft} right {tracker.AccRight}");
+            Plugin.Log.Info($"left {tracker.AccLeft} right {tracker.AccRight}");
             leftAverage.text = tracker.AccLeft.ToString("0.##");
             rightAverage.text = tracker.AccRight.ToString("0.##");
             

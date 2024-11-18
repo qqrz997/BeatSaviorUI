@@ -1,7 +1,7 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
 using JetBrains.Annotations;
 
-namespace BeatSaviorUI
+namespace BeatSaviorUI.UI
 {
 	[UsedImplicitly]
 	internal class SettingsMenu
