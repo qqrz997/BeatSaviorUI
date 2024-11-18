@@ -8,13 +8,15 @@ namespace BeatSaviorUI.HarmonyPatches
 	[UsedImplicitly]
 	internal class SoloFreePlayFlowCoordinatorPatch : IAffinity
 	{
+		private PluginConfig PluginConfig { get; }
 		private EndOfLevelViewController EndOfLevelViewController { get; }
 		private ScoreGraphViewController ScoreGraphViewController { get; }
 
-		public SoloFreePlayFlowCoordinatorPatch(EndOfLevelViewController endOfLevelViewController, ScoreGraphViewController scoreGraphViewController)
+		public SoloFreePlayFlowCoordinatorPatch(EndOfLevelViewController endOfLevelViewController, ScoreGraphViewController scoreGraphViewController, PluginConfig pluginConfig)
 		{
 			EndOfLevelViewController = endOfLevelViewController;
 			ScoreGraphViewController = scoreGraphViewController;
+			PluginConfig = pluginConfig;
 		}
 
 		[AffinityPatch(typeof(SoloFreePlayFlowCoordinator), nameof(SoloFreePlayFlowCoordinator.ProcessLevelCompletionResultsAfterLevelDidFinish))]
@@ -29,10 +31,13 @@ namespace BeatSaviorUI.HarmonyPatches
 			Plugin.Log.Debug($"Showing {nameof(ResultsViewController)}");
 			
 			__instance.SetLeftScreenViewController(EndOfLevelViewController, ViewController.AnimationType.None);
-			__instance.SetRightScreenViewController(ScoreGraphViewController, ViewController.AnimationType.None);
-			
 			EndOfLevelViewController.Refresh(PluginConfig.LastKnownPlayData, beatmapLevel);
-			ScoreGraphViewController.Refresh(PluginConfig.LastKnownPlayData);
+
+			if (!PluginConfig.DisableGraphPanel)
+			{
+				__instance.SetRightScreenViewController(ScoreGraphViewController, ViewController.AnimationType.None);
+				ScoreGraphViewController.Refresh(PluginConfig.LastKnownPlayData);
+			}
 		}
 	}
 }
