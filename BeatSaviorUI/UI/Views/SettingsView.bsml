@@ -1,5 +1,7 @@
-﻿<settings-container>
-  <checkbox text="Enabled" value="Enabled" />
-  <checkbox text="Hide number of pauses" value="HidePauseCount" />
-  <checkbox text="Disable Graph Panel" value="DisableGraphPanel" />
-</settings-container>
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:noNamespaceSchemaLocation='https://monkeymanboy.github.io/BSML-Docs/BSMLSchema.xsd'>
+  <settings-container>
+    <checkbox text="Enabled" value="Enabled" />
+    <checkbox text="Hide number of pauses" value="HidePauseCount" />
+    <checkbox text="Disable Graph Panel" value="DisableGraphPanel" />
+  </settings-container>
+</bg>

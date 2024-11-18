@@ -10,7 +10,7 @@ namespace BeatSaviorUI.UI
 		
 		public SettingsMenu(PluginConfig config) => Config = config;
 
-		[UIValue("EnableUI")]
+		[UIValue("Enabled")]
 		private bool Enabled
 		{
 			get => Config.Enabled;

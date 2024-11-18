@@ -14,7 +14,7 @@ namespace BeatSaviorUI.UI
 {
 	internal class ScoreGraphViewController : BSMLResourceViewController
 	{
-		public override string ResourceName => $"{Plugin.Name}.UI.Views.ScoreGraphView.bsml";
+		public override string ResourceName => $"{nameof(BeatSaviorUI)}.UI.Views.ScoreGraphView.bsml";
 
 		[UIObject("graph")] private readonly GameObject graphObject = null!;
 		[UIComponent("title")] private readonly CurvedTextMeshPro titleText = null!;

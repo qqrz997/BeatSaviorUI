@@ -5,6 +5,7 @@ using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
 using BeatSaviorUI.Models;
 using HMUI;
+using IPA.Loader;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -56,7 +57,8 @@ namespace BeatSaviorUI.UI
         [UIComponent("rightBeforeSwing")] private readonly TextMeshProUGUI rightBeforeSwing = null!;
         [UIComponent("leftAfterSwing")] private readonly TextMeshProUGUI leftAfterSwing = null!;
         [UIComponent("rightAfterSwing")] private readonly TextMeshProUGUI rightAfterSwing = null!;
-
+        
+        [UIComponent("creditsText")] private readonly TextMeshProUGUI creditsText = null!;
 
         private readonly List<(float, float)> curve =
         [
@@ -78,7 +80,7 @@ namespace BeatSaviorUI.UI
             (100, 110)
         ];
 
-        public override string ResourceName => $"{Plugin.Name}.UI.Views.EndOfLevelView.bsml";
+        public override string ResourceName => $"{nameof(BeatSaviorUI)}.UI.Views.EndOfLevelView.bsml";
         private ImageView songCoverImg, upperBandImg, lowerBandImg, leftCircleImg, rightCircleImg;
 
         private List<string> Lyrics { get; } =
@@ -201,6 +203,8 @@ namespace BeatSaviorUI.UI
 
             rightAfterSwing.color = colorScheme.saberBColor;
             rightAfterSwing.overflowMode = TextOverflowModes.Overflow;
+
+            creditsText.text = $"{Plugin.Metadata.Name} v{Plugin.Metadata.HVersion} by {Plugin.Metadata.Author}";
         }
 
         public void Refresh(PlayData playData, BeatmapLevel beatmapLevel)

@@ -8,7 +8,7 @@ namespace BeatSaviorUI.HarmonyPatches;
 [UsedImplicitly]
 public class HarmonyPatchController : IInitializable, IDisposable
 {
-    private Harmony Harmony { get; } = new(Plugin.Name);
+    private Harmony Harmony { get; } = new(Plugin.Metadata.Name);
     
     public void Initialize()
     {
