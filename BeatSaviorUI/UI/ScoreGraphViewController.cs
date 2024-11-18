@@ -18,6 +18,7 @@ namespace BeatSaviorUI.UI
 
 		[UIObject("graph")] private readonly GameObject graphObject = null!;
 		[UIComponent("title")] private readonly CurvedTextMeshPro titleText = null!;
+		[UIComponent("creditsText")] private readonly TextMeshProUGUI creditsText = null!;
 
 		private int lastSongBeat = 0;
 		private const float Width = 90;
@@ -84,6 +85,12 @@ namespace BeatSaviorUI.UI
 			"Duck plushies are the best plushies."
 		];
 
+		[UIAction("#post-parse")]
+		public void PostParse()
+		{
+			creditsText.text = $"{Plugin.Metadata.Name} v{Plugin.Metadata.HVersion} by {Plugin.Metadata.Author}";
+		}
+		
 		public void Refresh(PlayData playData)
 		{
 			lastSongBeat = 0;
