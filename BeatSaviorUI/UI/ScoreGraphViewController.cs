@@ -31,9 +31,6 @@ namespace BeatSaviorUI.UI
 		private List<float> misses = [];
 		private Dictionary<float, float> graph;
 
-		private bool postParseDone;
-		private PlayData tmpData;
-
 		private List<Color> Colors { get; } =
 		[
 			Color.yellow,
@@ -88,21 +85,8 @@ namespace BeatSaviorUI.UI
 			"Duck plushies are the best plushies."
 		];
 
-		[UIAction("#post-parse")]
-		public void PostParse()
+		public void Refresh(PlayData playData)
 		{
-			postParseDone = true;
-			if (tmpData != null)
-				Refresh(tmpData);
-		}
-
-		public void Refresh(PlayData tracker)
-		{
-			if (!postParseDone) {
-				tmpData = tracker;
-				return;
-			}
-
 			lastSongBeat = 0;
 			scoreOffset = 0;
 			modifiersMultiplier = 0;
@@ -114,19 +98,19 @@ namespace BeatSaviorUI.UI
 				foreach (Transform t in graphObject.transform)
 					Destroy(t.gameObject);
 
-				graph = tracker.Graph;
+				graph = playData.Graph;
 				float lastGraphEntry = -1;
 
 				// That should never happen but some magical things decided to fuck my monkey brain by doing impossible things once in a while and that's freaking annoying
 				if (graph.Count == 0)
 					return;
 
-				GetOffsets(tracker.CompletionResultsExtraData.Notes);
-				lastSongBeat = Mathf.CeilToInt(tracker.BeatmapInfo.SongDuration);
-				won = tracker.Won;
+				GetOffsets(playData.CompletionResultsExtraData.Notes);
+				lastSongBeat = Mathf.CeilToInt(playData.BeatmapInfo.SongDuration);
+				won = playData.Won;
 				if(!Plugin.Fish)
 				{
-					titleText.text = tracker.BeatmapInfo.SongName;
+					titleText.text = playData.BeatmapInfo.SongName;
 				}
 				else
 				{
@@ -136,7 +120,7 @@ namespace BeatSaviorUI.UI
 				titleText.enableAutoSizing = true;
 				titleText.fontSizeMin = 1;
 				titleText.fontSizeMax = 10;
-				modifiersMultiplier = tracker.ModifiersMultiplier;
+				modifiersMultiplier = playData.ModifiersMultiplier;
 
 				CreateHorizontalLabels();
 

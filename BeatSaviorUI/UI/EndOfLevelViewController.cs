@@ -79,9 +79,6 @@ namespace BeatSaviorUI.UI
         ];
 
         public override string ResourceName => $"{Plugin.Name}.UI.Views.EndOfLevelView.bsml";
-        private bool postParseDone;
-        private PlayData playData;
-        private BeatmapLevel tempBeatmapLevel;
         private ImageView songCoverImg, upperBandImg, lowerBandImg, leftCircleImg, rightCircleImg;
 
         private List<string> Lyrics { get; } =
@@ -204,38 +201,28 @@ namespace BeatSaviorUI.UI
 
             rightAfterSwing.color = colorScheme.saberBColor;
             rightAfterSwing.overflowMode = TextOverflowModes.Overflow;
-
-            postParseDone = true;
-            if(playData != null && tempBeatmapLevel != null)
-                Refresh(playData, tempBeatmapLevel);
         }
 
-        public void Refresh(PlayData tracker, BeatmapLevel beatmapLevel)
+        public void Refresh(PlayData playData, BeatmapLevel beatmapLevel)
         {
-            if (!postParseDone) {
-                playData = tracker;
-                tempBeatmapLevel = beatmapLevel;
-                return;
-            }
-
             songCoverImg.sprite = beatmapLevel.previewMediaData.GetCoverSpriteAsync().Result;
             
-            title.text = tracker.BeatmapInfo.SongName;
-            artist.text = tracker.BeatmapInfo.SongArtist;
-            mapper.text = tracker.BeatmapInfo.SongMapper;
+            title.text = playData.BeatmapInfo.SongName;
+            artist.text = playData.BeatmapInfo.SongArtist;
+            mapper.text = playData.BeatmapInfo.SongMapper;
 
-            difficulty.text = FormatSongDifficulty(tracker.BeatmapInfo.SongDifficulty);
-            difficulty.color = SetColorBasedOnDifficulty(tracker.BeatmapInfo.SongDifficulty);
+            difficulty.text = FormatSongDifficulty(playData.BeatmapInfo.SongDifficulty);
+            difficulty.color = SetColorBasedOnDifficulty(playData.BeatmapInfo.SongDifficulty);
 
             // ReSharper disable RedundantLogicalConditionalExpressionOperand
             // ReSharper disable once RedundantBoolCompare
             if(!Plugin.Fish && true != false && (true || !false) && 1+3 != 5 || 42 == 69)
             {
-                rank.text = tracker.Rank;
-                percent.text = (tracker.ModifiedRatio * 100).ToString("F") + " %";
-                combo.text = tracker.CompletionResultsExtraData.MaxCombo.ToString();
-                miss.text = tracker.FullCombo ? "FC" : tracker.ComboBreaks.ToString();
-                pauses.text = config.HidePauseCount ? "-" : tracker.CompletionResultsExtraData.PauseCount.ToString();
+                rank.text = playData.Rank;
+                percent.text = (playData.ModifiedRatio * 100).ToString("F") + " %";
+                combo.text = playData.CompletionResultsExtraData.MaxCombo.ToString();
+                miss.text = playData.FullCombo ? "FC" : playData.ComboBreaks.ToString();
+                pauses.text = config.HidePauseCount ? "-" : playData.CompletionResultsExtraData.PauseCount.ToString();
             }
             else
             {
@@ -252,38 +239,38 @@ namespace BeatSaviorUI.UI
             }
             rank.color = SetColorBasedOnRank(rank.text);
             
-            var color = tracker.FullCombo ? (Color)goldColor : Color.white;
+            var color = playData.FullCombo ? (Color)goldColor : Color.white;
             miss.color = color;
             missLabel.color = color;
             lowerBandImg.color = color;
             upperBandImg.color = color;
 
-            StartCoroutine(AnimateCircle(leftCircleImg, GetCircleFillRatio(tracker.AccLeft), 1.5f));
-            StartCoroutine(AnimateCircle(rightCircleImg, GetCircleFillRatio(tracker.AccRight), 1.5f));
+            StartCoroutine(AnimateCircle(leftCircleImg, GetCircleFillRatio(playData.AccLeft), 1.5f));
+            StartCoroutine(AnimateCircle(rightCircleImg, GetCircleFillRatio(playData.AccRight), 1.5f));
 
-            leftAverage.text = tracker.AccLeft.ToString("0.##");
-            rightAverage.text = tracker.AccRight.ToString("0.##");
+            leftAverage.text = playData.AccLeft.ToString("0.##");
+            rightAverage.text = playData.AccRight.ToString("0.##");
             
-            leftBeforeCut.text = tracker.LeftAverageCut[0].ToString("0.#");
-            rightBeforeCut.text = tracker.RightAverageCut[0].ToString("0.#");
+            leftBeforeCut.text = playData.LeftAverageCut[0].ToString("0.#");
+            rightBeforeCut.text = playData.RightAverageCut[0].ToString("0.#");
             
-            leftAccuracy.text = tracker.LeftAverageCut[1].ToString("0.#");
-            rightAccuracy.text = tracker.RightAverageCut[1].ToString("0.#");
+            leftAccuracy.text = playData.LeftAverageCut[1].ToString("0.#");
+            rightAccuracy.text = playData.RightAverageCut[1].ToString("0.#");
             
-            leftAfterCut.text = tracker.LeftAverageCut[2].ToString("0.#");
-            rightAfterCut.text = tracker.RightAverageCut[2].ToString("0.#");
+            leftAfterCut.text = playData.LeftAverageCut[2].ToString("0.#");
+            rightAfterCut.text = playData.RightAverageCut[2].ToString("0.#");
             
-            leftTd.text = tracker.LeftTimeDependence.ToString("0.###");
-            rightTd.text = tracker.RightTimeDependence.ToString("0.###");
+            leftTd.text = playData.LeftTimeDependence.ToString("0.###");
+            rightTd.text = playData.RightTimeDependence.ToString("0.###");
             
-            leftSpeed.text = (tracker.LeftSpeed * 3.6f).ToString("0.##") + " Km/h";
-            rightSpeed.text = (tracker.RightSpeed * 3.6f).ToString("0.##") + " Km/h";
+            leftSpeed.text = (playData.LeftSpeed * 3.6f).ToString("0.##") + " Km/h";
+            rightSpeed.text = (playData.RightSpeed * 3.6f).ToString("0.##") + " Km/h";
             
-            leftBeforeSwing.text = (tracker.LeftPreSwing * 100).ToString("0.##") + " %";
-            rightBeforeSwing.text = (tracker.RightPreSwing * 100).ToString("0.##") + " %";
+            leftBeforeSwing.text = (playData.LeftPreSwing * 100).ToString("0.##") + " %";
+            rightBeforeSwing.text = (playData.RightPreSwing * 100).ToString("0.##") + " %";
             
-            leftAfterSwing.text = (tracker.LeftPostSwing * 100).ToString("0.##") + " %";
-            rightAfterSwing.text = (tracker.RightPostSwing * 100).ToString("0.##") + " %";
+            leftAfterSwing.text = (playData.LeftPostSwing * 100).ToString("0.##") + " %";
+            rightAfterSwing.text = (playData.RightPostSwing * 100).ToString("0.##") + " %";
         }
 
         private static Color32 SetColorBasedOnRank(string rank) => rank switch
