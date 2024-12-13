@@ -27,7 +27,7 @@ namespace BeatSaviorUI
 			
 			zenjector.Install<AppInstaller>(Location.App, ipaConfig.Generated<PluginConfig>());
 			zenjector.Install<MenuInstaller>(Location.Menu);
-			zenjector.Install<PlayerInstaller>(Location.Player);
+			zenjector.Install<PlayerInstaller>(Location.StandardPlayer | Location.CampaignPlayer);
 			
 			var dateTime = IPA.Utilities.Utils.CanUseDateTimeNowSafely ? DateTime.Now : DateTime.UtcNow;
 			Fish = dateTime is { Day: 1, Month: 4 };
