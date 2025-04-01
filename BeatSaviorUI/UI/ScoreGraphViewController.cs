@@ -29,7 +29,7 @@ namespace BeatSaviorUI.UI
 		private bool won = true;
 
 		private List<float> misses = [];
-		private Dictionary<float, float> graph;
+		private Dictionary<float, float> graph = [];
 
 		private List<Color> Colors { get; } =
 		[

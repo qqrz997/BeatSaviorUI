@@ -27,6 +27,12 @@ namespace BeatSaviorUI.HarmonyPatches
 				return;
 			}
 
+			if (PluginConfig.LastKnownPlayData is null)
+			{
+				Plugin.Log.Error("There is no last known play data available. Skipping showing results data.");
+				return;
+			}
+
 			// Show end of song UI
 			Plugin.Log.Debug($"Showing {nameof(ResultsViewController)}");
 			

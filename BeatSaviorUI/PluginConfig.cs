@@ -14,6 +14,6 @@ namespace BeatSaviorUI
         public virtual bool HidePauseCount { get; set; } = false;
         public virtual bool DisableGraphPanel { get; set; } = false;
         
-        [Ignore] public static PlayData LastKnownPlayData { get; set; }
+        [Ignore] public static PlayData? LastKnownPlayData { get; set; }
     }
 }

@@ -81,7 +81,13 @@ namespace BeatSaviorUI.UI
         ];
 
         public override string ResourceName => $"{nameof(BeatSaviorUI)}.UI.Views.EndOfLevelView.bsml";
-        private ImageView songCoverImg, upperBandImg, lowerBandImg, leftCircleImg, rightCircleImg;
+        
+        // Initialized in post-parse
+        private ImageView songCoverImg = null!;
+        private ImageView upperBandImg = null!;
+        private ImageView lowerBandImg = null!;
+        private ImageView leftCircleImg = null!;
+        private ImageView rightCircleImg = null!;
 
         private List<string> Lyrics { get; } =
         [

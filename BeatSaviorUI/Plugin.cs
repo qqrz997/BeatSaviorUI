@@ -15,8 +15,8 @@ namespace BeatSaviorUI
 	internal class Plugin
 	{
 		public static Assembly ExecutingAssembly { get; } = Assembly.GetExecutingAssembly();
-		public static PluginMetadata Metadata { get; private set; }
-		public static IPALogger Log { get; private set; }
+		public static PluginMetadata Metadata { get; private set; } = null!;
+		public static IPALogger Log { get; private set; } = null!;
 		public static bool Fish { get; private set; }
 
 		[Init]

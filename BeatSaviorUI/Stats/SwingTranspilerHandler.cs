@@ -7,10 +7,10 @@ namespace BeatSaviorUI.Stats
 {
 	public class SwingHolder
 	{
-		public SaberSwingRatingCounter ssrc;
+		public SaberSwingRatingCounter? ssrc;
 		public float preswing, postswing;
 
-		public SwingHolder(SaberSwingRatingCounter _ssrc)
+		public SwingHolder(SaberSwingRatingCounter? _ssrc)
 		{
 			ssrc = _ssrc;
 		}
@@ -43,7 +43,7 @@ namespace BeatSaviorUI.Stats
 			takeNextPreswing = false;
 		}
 
-		public static void PreparePreswing(SaberSwingRatingCounter ssrc)
+		public static void PreparePreswing(SaberSwingRatingCounter? ssrc)
 		{
 			if (!swings.Any((s) => s.ssrc == ssrc))
 			{
@@ -65,7 +65,7 @@ namespace BeatSaviorUI.Stats
 			}
 		}
 
-		public static void AddPostswing(SaberSwingRatingCounter ssrc, float swing)
+		public static void AddPostswing(SaberSwingRatingCounter? ssrc, float swing)
 		{
 			SwingHolder sh = swings.Find((s) => s.ssrc == ssrc);
 
@@ -73,7 +73,7 @@ namespace BeatSaviorUI.Stats
 				sh.AddPostSwing(swing);
 		}
 
-		public static SwingHolder GetSwing(SaberSwingRatingCounter ssrc)
+		public static SwingHolder GetSwing(SaberSwingRatingCounter? ssrc)
 		{
 			SwingHolder sh = swings.Find((s) => s.ssrc == ssrc);
 			swings.Remove(sh);
