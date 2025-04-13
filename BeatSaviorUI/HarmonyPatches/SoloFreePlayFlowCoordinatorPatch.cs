@@ -37,7 +37,7 @@ namespace BeatSaviorUI.HarmonyPatches
 			Plugin.Log.Debug($"Showing {nameof(ResultsViewController)}");
 			
 			__instance.SetLeftScreenViewController(EndOfLevelViewController, ViewController.AnimationType.None);
-			EndOfLevelViewController.Refresh(PluginConfig.LastKnownPlayData, beatmapLevel);
+			EndOfLevelViewController.SetData(PluginConfig.LastKnownPlayData, beatmapLevel);
 
 			if (!PluginConfig.DisableGraphPanel)
 			{

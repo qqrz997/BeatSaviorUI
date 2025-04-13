@@ -12,20 +12,20 @@
   <bg anchor-min-x='0' anchor-max-x='1' anchor-min-y='0.61' anchor-max-y='0.74' size-delta-x='0' size-delta-y='0'>
     <bg id='upperBand' anchor-min-x='0' anchor-max-x='1' anchor-min-y='0.97' anchor-max-y='1' size-delta-x='0' size-delta-y='0'/>
 
-    <text id='rankLabel' align='Center' text='Rating' font-size='3' anchor-min-x='0' anchor-max-x='0.2' anchor-min-y='0.5' anchor-max-y='0.9' size-delta-x='0' size-delta-y='0'/>
-    <text id='rank' align='Center' font-size='5' bold='true' text='Rating' anchor-min-x='0' anchor-max-x='0.2' anchor-min-y='0.1' anchor-max-y='0.5' size-delta-x='0' size-delta-y='0'/>
+    <text id='rankLabel' text='Rating' align='Center' font-size='3' anchor-min-x='0' anchor-max-x='0.2' anchor-min-y='0.5' anchor-max-y='0.9' size-delta-x='0' size-delta-y='0'/>
+    <text id='rank' text='Rating' align='Center' font-size='5' bold='true' anchor-min-x='0' anchor-max-x='0.2' anchor-min-y='0.1' anchor-max-y='0.5' size-delta-x='0' size-delta-y='0'/>
 
-    <text id='percentLabel' align='Center' text='Score' font-size='3' anchor-min-x='0.2' anchor-max-x='0.4' anchor-min-y='0.5' anchor-max-y='0.9' size-delta-x='0' size-delta-y='0'/>
-    <text id='percent' align='Center' font-size='5' bold='true' text='Rating' anchor-min-x='0.2' anchor-max-x='0.4' anchor-min-y='0.1' anchor-max-y='0.5' size-delta-x='0' size-delta-y='0'/>
+    <text id='percentLabel' text='Score' align='Center' font-size='3' anchor-min-x='0.2' anchor-max-x='0.4' anchor-min-y='0.5' anchor-max-y='0.9' size-delta-x='0' size-delta-y='0'/>
+    <text id='percent' text='Rating' align='Center' font-size='5' bold='true' anchor-min-x='0.2' anchor-max-x='0.4' anchor-min-y='0.1' anchor-max-y='0.5' size-delta-x='0' size-delta-y='0'/>
 
-    <text id='comboLabel' align='Center' text='Combo' font-size='3' anchor-min-x='0.4' anchor-max-x='0.6' anchor-min-y='0.5' anchor-max-y='0.9' size-delta-x='0' size-delta-y='0'/>
-    <text id='combo' align='Center' font-size='5' bold='true' text='Rating' anchor-min-x='0.4' anchor-max-x='0.6' anchor-min-y='0.1' anchor-max-y='0.5' size-delta-x='0' size-delta-y='0'/>
+    <text id='comboLabel' text='Combo' align='Center' font-size='3' anchor-min-x='0.4' anchor-max-x='0.6' anchor-min-y='0.5' anchor-max-y='0.9' size-delta-x='0' size-delta-y='0'/>
+    <text id='combo' text='Rating' align='Center' bold='true' font-size='5' anchor-min-x='0.4' anchor-max-x='0.6' anchor-min-y='0.1' anchor-max-y='0.5' size-delta-x='0' size-delta-y='0'/>
 
-    <text id='missLabel' align='Center' text='Misses' font-size='3' anchor-min-x='0.6' anchor-max-x='0.8' anchor-min-y='0.5' anchor-max-y='0.9' size-delta-x='0' size-delta-y='0'/>
-    <text id='miss' align='Center' font-size='5' bold='true' text='Rating' anchor-min-x='0.6' anchor-max-x='0.8' anchor-min-y='0.1' anchor-max-y='0.5' size-delta-x='0' size-delta-y='0'/>
+    <text id='missLabel' text='Misses' align='Center' font-size='3' anchor-min-x='0.6' anchor-max-x='0.8' anchor-min-y='0.5' anchor-max-y='0.9' size-delta-x='0' size-delta-y='0'/>
+    <text id='miss' text='Rating' align='Center' font-size='5' bold='true' anchor-min-x='0.6' anchor-max-x='0.8' anchor-min-y='0.1' anchor-max-y='0.5' size-delta-x='0' size-delta-y='0'/>
     
-    <text id='pausesLabel' align='Center' text='Pauses' font-size='3' anchor-min-x='0.8' anchor-max-x='1' anchor-min-y='0.5' anchor-max-y='0.9' size-delta-x='0' size-delta-y='0'/>
-    <text id='pauses' align='Center' font-size='5' bold='true' text='Rating' anchor-min-x='0.8' anchor-max-x='1' anchor-min-y='0.1' anchor-max-y='0.5' size-delta-x='0' size-delta-y='0'/>
+    <text id='pausesLabel' text='Pauses' align='Center' font-size='3' anchor-min-x='0.8' anchor-max-x='1' anchor-min-y='0.5' anchor-max-y='0.9' size-delta-x='0' size-delta-y='0'/>
+    <text id='pauses' text='Rating' align='Center' font-size='5' bold='true' anchor-min-x='0.8' anchor-max-x='1' anchor-min-y='0.1' anchor-max-y='0.5' size-delta-x='0' size-delta-y='0'/>
 
     <bg id='lowerBand' anchor-min-x='0' anchor-max-x='1' anchor-min-y='0' anchor-max-y='0.03' size-delta-x='0' size-delta-y='0'/>
   </bg>

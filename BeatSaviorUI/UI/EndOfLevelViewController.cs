@@ -1,11 +1,10 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
 using BeatSaviorUI.Models;
+using BeatSaviorUI.Utilities;
 using HMUI;
-using IPA.Loader;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -68,13 +67,6 @@ namespace BeatSaviorUI.UI
         private ImageView lowerBandImg = null!;
         private ImageView leftCircleImg = null!;
         private ImageView rightCircleImg = null!;
-
-        private List<string> Lyrics { get; } =
-        [
-            "Never", "gonna", "give", "you", "up", "Never", "gonna", "let", "you", "down"
-        ];
-
-        private readonly Color32 goldColor = new(237, 201, 103, 255);
 
         [UIAction("#post-parse")]
         public void PostParse()
@@ -193,7 +185,7 @@ namespace BeatSaviorUI.UI
             creditsText.text = $"{Plugin.Metadata.Name} v{Plugin.Metadata.HVersion} by {Plugin.Metadata.Author}";
         }
 
-        public void Refresh(PlayData playData, BeatmapLevel beatmapLevel)
+        public void SetData(PlayData playData, BeatmapLevel beatmapLevel)
         {
             songCoverImg.sprite = beatmapLevel.previewMediaData.GetCoverSpriteAsync().Result;
             
@@ -201,33 +193,33 @@ namespace BeatSaviorUI.UI
             artist.text = playData.BeatmapInfo.SongArtist;
             mapper.text = playData.BeatmapInfo.SongMapper;
 
-            difficulty.text = FormatSongDifficulty(playData.BeatmapInfo.SongDifficulty);
-            difficulty.color = SetColorBasedOnDifficulty(playData.BeatmapInfo.SongDifficulty);
+            (difficulty.text, difficulty.color) = playData.BeatmapInfo.GetDifficultyNameAndColor();
 
             if(!Plugin.Fish)
             {
-                rank.text = playData.Rank;
-                percent.text = (playData.ScoreRatio * 100).ToString("F") + " %"; //broke with mods
-                combo.text = playData.CompletionResultsExtraData.MaxCombo.ToString(); //broke
-                miss.text = playData.FullCombo ? "FC" : playData.ComboBreaks.ToString();
-                pauses.text = config.HidePauseCount ? "-" : playData.CompletionResultsExtraData.PauseCount.ToString();
+                rank.text = playData.Rank.Name;
+                percent.text = $"{playData.ScoreRatio * 100:F} %"; //broke with mods
+                combo.text = $"{playData.CompletionResultsExtraData.MaxCombo}"; //broke
+                miss.text = playData.FullCombo ? "FC" : $"{playData.ComboBreaks}";
+                pauses.text = config.HidePauseCount ? "-" : $"{playData.CompletionResultsExtraData.PauseCount}";
             }
             else
             {
-                rankLabel.text = Lyrics[0];
-                rank.text = Lyrics[5];
-                percentLabel.text = Lyrics[1];
-                percent.text = Lyrics[6];
-                comboLabel.text = Lyrics[2];
-                combo.text = Lyrics[7];
-                missLabel.text = Lyrics[3];
-                miss.text = Lyrics[8];
-                pausesLabel.text = Lyrics[4];
-                pauses.text = Lyrics[9];
+                rankLabel.text = "Never";
+                rank.text = "Never";
+                percentLabel.text = "gonna";
+                percent.text = "gonna";
+                comboLabel.text = "give";
+                combo.text = "let";
+                missLabel.text = "you";
+                miss.text = "you";
+                pausesLabel.text = "up,";
+                pauses.text = "down.";
             }
-            rank.color = SetColorBasedOnRank(rank.text);
+
+            rank.color = playData.Rank.Color;
             
-            var color = playData.FullCombo ? (Color)goldColor : Color.white;
+            var color = playData.FullCombo ? new(0.93f, 0.79f, 0.4f) : Color.white;
             miss.color = color;
             missLabel.color = color;
             lowerBandImg.color = color;
@@ -262,37 +254,7 @@ namespace BeatSaviorUI.UI
             
             leftAfterSwing.text = $"{playData.Left.PostSwing * 100f:F2} %";
             rightAfterSwing.text = $"{playData.Right.PostSwing * 100f:F2} %";
-        }   
-
-        private static Color32 SetColorBasedOnRank(string rank) => rank switch
-        {
-            "SSS" or "SS" => new(0x00, 0xF0, 0xFF, 0xFF),
-            "A" => new(0x00, 0xFF, 0x00, 0xFF),
-            "B" => new(0xFF, 0xFF, 0x00, 0xFF),
-            "C" => new(0xFF, 0xA7, 0x00, 0xFF),
-            "D" or "E" => new(0xFF, 0x00, 0x00, 0xFF),
-            _ => new(0xFF, 0xFF, 0xFF, 0xFF)
-        };
-
-        private static Color32 SetColorBasedOnDifficulty(string diffName) => diffName switch
-        {
-            "easy" => new(0x3c, 0xb3, 0x71, 0xFF),
-            "normal" => new(0x59, 0xb0, 0xf4, 0xFF),
-            "hard" => new(0xFF, 0xa5, 0x00, 0xFF),
-            "expert" => new(0xbf, 0x2a, 0x42, 0xFF),
-            "expertplus" => new(0x8f, 0x48, 0xdb, 0xFF),
-            _ => new(0xFF, 0xFF, 0xFF, 0xFF)
-        };
-
-        private static string FormatSongDifficulty(string diffName) => diffName switch
-        {
-            "easy" => "Easy",
-            "normal" => "Normal",
-            "hard" => "Hard",
-            "expert" => "Expert",
-            "expertplus" => "Expert+",
-            _ => "Unknown"
-        };
+        }
 
         private static IEnumerator AnimateCircle(ImageView img, float final, float totalTime)
         {

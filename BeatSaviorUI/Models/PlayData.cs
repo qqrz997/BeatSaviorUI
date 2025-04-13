@@ -10,7 +10,7 @@ internal class PlayData
 	public float ModifiersMultiplier { get; }
     public float ScoreRatio { get; }
 
-    public string Rank { get; }
+    public Rank Rank { get; }
     public bool Won { get; }
     public bool FullCombo { get; }
     public int ComboBreaks { get; }
@@ -23,7 +23,10 @@ internal class PlayData
     public CompletionResultsExtraData CompletionResultsExtraData { get; }
     public BeatmapInfo BeatmapInfo { get; }
     
-    public PlayData(LevelCompletionResults levelCompletionResults, CompletionResultsExtraData completionResultsExtraData, BeatmapInfo beatmapInfo)
+    public PlayData(
+	    LevelCompletionResults levelCompletionResults,
+	    CompletionResultsExtraData completionResultsExtraData,
+	    BeatmapInfo beatmapInfo)
     {
 	    CompletionResultsExtraData = completionResultsExtraData;
 	    BeatmapInfo = beatmapInfo;
@@ -31,7 +34,7 @@ internal class PlayData
         Won = levelCompletionResults.levelEndStateType == LevelCompletionResults.LevelEndStateType.Cleared;
         FullCombo = levelCompletionResults.fullCombo;
 		
-        Rank = RankModel.GetRankName(levelCompletionResults.rank);
+        Rank = new(RankModel.GetRankName(levelCompletionResults.rank));
         ModifiersMultiplier = GetTotalMultiplier(levelCompletionResults.gameplayModifiers, levelCompletionResults.energy);
         ScoreRatio = SafeMath.Divide(CompletionResultsExtraData.Notes.Select(n => n.TotalScore).Sum(), 
 										Utils.MaxRawScoreForNumberOfNotes(CompletionResultsExtraData.Notes.Count));
