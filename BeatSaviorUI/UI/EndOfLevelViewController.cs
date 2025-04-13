@@ -60,26 +60,6 @@ namespace BeatSaviorUI.UI
         
         [UIComponent("creditsText")] private readonly TextMeshProUGUI creditsText = null!;
 
-        private readonly List<(float, float)> curve =
-        [
-            (0, 0),
-            (40, 8),
-            (50, 15),
-            (69, 25),
-            (75, 42.5f), 
-            (82, 56), 
-            (84.5f, 63),
-            (86, 72),
-            (88, 76.6f),
-            (90, 81.5f),
-            (91, 85),
-            (92, 88.5f),
-            (93, 92),
-            (94, 97.4f), 
-            (95, 103.6f),
-            (100, 110)
-        ];
-
         public override string ResourceName => $"{nameof(BeatSaviorUI)}.UI.Views.EndOfLevelView.bsml";
         
         // Initialized in post-parse
@@ -224,9 +204,7 @@ namespace BeatSaviorUI.UI
             difficulty.text = FormatSongDifficulty(playData.BeatmapInfo.SongDifficulty);
             difficulty.color = SetColorBasedOnDifficulty(playData.BeatmapInfo.SongDifficulty);
 
-            // ReSharper disable RedundantLogicalConditionalExpressionOperand
-            // ReSharper disable once RedundantBoolCompare
-            if(!Plugin.Fish && true != false && (true || !false) && 1+3 != 5 || 42 == 69)
+            if(!Plugin.Fish)
             {
                 rank.text = playData.Rank;
                 percent.text = (playData.ScoreRatio * 100).ToString("F") + " %"; //broke with mods
@@ -255,33 +233,36 @@ namespace BeatSaviorUI.UI
             lowerBandImg.color = color;
             upperBandImg.color = color;
 
-            StartCoroutine(AnimateCircle(leftCircleImg, GetCircleFillRatio(playData.AccLeft), 1.5f));
-            StartCoroutine(AnimateCircle(rightCircleImg, GetCircleFillRatio(playData.AccRight), 1.5f));
+            var leftRatio = playData.Left.Accuracy.Sum() / 115f;
+            var rightRatio = playData.Right.Accuracy.Sum() / 115f;
+            
+            StartCoroutine(AnimateCircle(leftCircleImg, leftRatio, 1.5f));
+            StartCoroutine(AnimateCircle(rightCircleImg, rightRatio, 1.5f));
+            
+            leftAverage.text = $"{leftRatio:F2}";
+            rightAverage.text = $"{rightRatio:F2}";
 
-            leftAverage.text = playData.AccLeft.ToString("0.##");
-            rightAverage.text = playData.AccRight.ToString("0.##");
+            leftBeforeCut.text = $"{playData.Left.Accuracy.Before:F1}";
+            rightBeforeCut.text = $"{playData.Right.Accuracy.Before:F1}";
+
+            leftAccuracy.text = $"{playData.Left.Accuracy.Center:F1}";
+            rightAccuracy.text = $"{playData.Right.Accuracy.Center:F1}";
             
-            leftBeforeCut.text = playData.LeftAverageCut[0].ToString("0.#");
-            rightBeforeCut.text = playData.RightAverageCut[0].ToString("0.#");
+            leftAfterCut.text = $"{playData.Left.Accuracy.After:F1}";
+            rightAfterCut.text = $"{playData.Right.Accuracy.After:F1}";
             
-            leftAccuracy.text = playData.LeftAverageCut[1].ToString("0.#");
-            rightAccuracy.text = playData.RightAverageCut[1].ToString("0.#");
+            leftTd.text = $"{playData.Left.TimeDependence:F3}";
+            rightTd.text = $"{playData.Right.TimeDependence:F3}";
+
+            leftSpeed.text = $"{playData.Left.Speed * 3.6f:F2} Km/h"; 
+            rightSpeed.text = $"{playData.Right.Speed * 3.6f:F2} Km/h"; 
             
-            leftAfterCut.text = playData.LeftAverageCut[2].ToString("0.#");
-            rightAfterCut.text = playData.RightAverageCut[2].ToString("0.#");
+            leftBeforeSwing.text = $"{playData.Left.PreSwing * 100f:F2} %";
+            rightBeforeSwing.text = $"{playData.Right.PreSwing * 100f:F2} %";
             
-            leftTd.text = playData.LeftTimeDependence.ToString("0.###");
-            rightTd.text = playData.RightTimeDependence.ToString("0.###");
-            
-            leftSpeed.text = (playData.LeftSpeed * 3.6f).ToString("0.##") + " Km/h";
-            rightSpeed.text = (playData.RightSpeed * 3.6f).ToString("0.##") + " Km/h";
-            
-            leftBeforeSwing.text = (playData.LeftPreSwing * 100).ToString("0.##") + " %";
-            rightBeforeSwing.text = (playData.RightPreSwing * 100).ToString("0.##") + " %";
-            
-            leftAfterSwing.text = (playData.LeftPostSwing * 100).ToString("0.##") + " %";
-            rightAfterSwing.text = (playData.RightPostSwing * 100).ToString("0.##") + " %";
-        }
+            leftAfterSwing.text = $"{playData.Left.PostSwing * 100f:F2} %";
+            rightAfterSwing.text = $"{playData.Right.PostSwing * 100f:F2} %";
+        }   
 
         private static Color32 SetColorBasedOnRank(string rank) => rank switch
         {
@@ -312,30 +293,6 @@ namespace BeatSaviorUI.UI
             "expertplus" => "Expert+",
             _ => "Unknown"
         };
-
-        private float GetCircleFillRatio(float accuracy)
-        {
-            const float maxPpPercent = 110; // The max number of pp (in %) (yes it's not 100%, look at the curve)
-            float accRatio = (accuracy / 115) * 100;
-
-            for(int i = 1; i < curve.Count; i++)
-            {
-                if (!(curve[i].Item1 >= accRatio))
-                {
-                    continue;
-                }
-
-                float max = curve[i].Item1; 
-                float maxValue = curve[i].Item2;
-                float min = curve[i - 1].Item1; 
-                float minValue = curve[i - 1].Item2;
-                float curveRatio = (accRatio - min) / (max - min);
-
-                return (minValue + (maxValue - minValue) * curveRatio) / maxPpPercent;
-            }
-
-            return 1;
-        }
 
         private static IEnumerator AnimateCircle(ImageView img, float final, float totalTime)
         {

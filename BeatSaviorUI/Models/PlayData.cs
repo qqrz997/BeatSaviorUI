@@ -10,30 +10,18 @@ internal class PlayData
 	public float ModifiersMultiplier { get; }
     public float ScoreRatio { get; }
 
-    public bool Won { get; }
     public string Rank { get; }
+    public bool Won { get; }
+    public bool FullCombo { get; }
+    public int ComboBreaks { get; }
 
     public Dictionary<float, float> Graph { get; } = [];
-    
-    public float AccRight { get; }
-    public float AccLeft { get; }
-    public float LeftSpeed { get; }
-    public float RightSpeed { get; }
-    public float LeftPreSwing { get; }
-    public float RightPreSwing { get; }
-    public float LeftPostSwing { get; }
-    public float RightPostSwing { get; }
-    public float LeftTimeDependence { get; }
-    public float RightTimeDependence { get; }
-    public float[] LeftAverageCut { get; } = new float[3];
-    public float[] RightAverageCut { get; } = new float[3];
 
-    public int ComboBreaks { get; }
+    public PlayTelemetry Left { get; } = new();
+    public PlayTelemetry Right { get; } = new();
     
     public CompletionResultsExtraData CompletionResultsExtraData { get; }
     public BeatmapInfo BeatmapInfo { get; }
-	
-    public bool FullCombo { get; }
     
     public PlayData(LevelCompletionResults levelCompletionResults, CompletionResultsExtraData completionResultsExtraData, BeatmapInfo beatmapInfo)
     {
@@ -91,26 +79,12 @@ internal class PlayData
 			if (note.ColorType == ColorType.ColorA)
 			{
 				leftNoteHitCount++;
-				AccLeft += note.Score[0] + note.Score[1] + note.Score[2];
-				LeftAverageCut[0] += note.Score[0];
-				LeftAverageCut[1] += note.Score[1];
-				LeftAverageCut[2] += note.Score[2];
-				LeftSpeed += note.Speed;
-				LeftPreSwing += note.PreSwing;
-				LeftPostSwing += note.PostSwing;
-				LeftTimeDependence += note.TimeDependence;
+				Left.ProcessNote(note);
 			} 
 			else
 			{
 				rightNoteHitCount++;
-				AccRight += note.Score[0] + note.Score[1] + note.Score[2];
-				RightAverageCut[0] += note.Score[0];
-				RightAverageCut[1] += note.Score[1];
-				RightAverageCut[2] += note.Score[2];
-				RightSpeed += note.Speed;
-				RightPreSwing += note.PreSwing;
-				RightPostSwing += note.PostSwing;
-				RightTimeDependence += note.TimeDependence;
+				Right.ProcessNote(note);
 			}
 		}
         
@@ -124,25 +98,8 @@ internal class PlayData
 			Graph.Add(point.Key, lastGraphNodes.Average());
 		}
 
-		AccRight = SafeMath.Divide(AccRight, rightNoteHitCount);
-		AccLeft = SafeMath.Divide(AccLeft, leftNoteHitCount);
-
-		for (int i = 0; i < 3; i++) {
-			LeftAverageCut[i] = SafeMath.Divide(LeftAverageCut[i], leftNoteHitCount);
-			RightAverageCut[i] = SafeMath.Divide(RightAverageCut[i], rightNoteHitCount);
-		}
-
-		LeftSpeed = SafeMath.Divide(LeftSpeed, leftNoteHitCount);
-		RightSpeed = SafeMath.Divide(RightSpeed, rightNoteHitCount);
-
-		LeftTimeDependence = SafeMath.Divide(LeftTimeDependence, leftNoteHitCount);
-		RightTimeDependence = SafeMath.Divide(RightTimeDependence, rightNoteHitCount);
-
-		LeftPreSwing = SafeMath.Divide(LeftPreSwing, leftNoteHitCount);
-		RightPreSwing = SafeMath.Divide(RightPreSwing, rightNoteHitCount);
-
-		LeftPostSwing = SafeMath.Divide(LeftPostSwing, leftNoteHitCount);
-		RightPostSwing = SafeMath.Divide(RightPostSwing, rightNoteHitCount);
+		Left.ProcessNoteHitCount(leftNoteHitCount);
+		Right.ProcessNoteHitCount(rightNoteHitCount);
     }
     
     // Modifiers aren't used in UI, but they could be
