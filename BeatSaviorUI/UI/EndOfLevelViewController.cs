@@ -318,7 +318,7 @@ namespace BeatSaviorUI.UI
             const float maxPpPercent = 110; // The max number of pp (in %) (yes it's not 100%, look at the curve)
             float accRatio = (accuracy / 115) * 100;
 
-            for(int i = 0; i < curve.Count; i++)
+            for(int i = 1; i < curve.Count; i++)
             {
                 if (!(curve[i].Item1 >= accRatio))
                 {

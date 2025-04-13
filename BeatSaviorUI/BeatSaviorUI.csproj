@@ -126,6 +126,10 @@
     <EmbeddedResource Include="UI\Views\*.bsml" />
   </ItemGroup>
   
+  <ItemGroup>
+    <Content Include="BeatSaviorUI.csproj.user" />
+  </ItemGroup>
+  
   <PropertyGroup>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
     <EnableFrameworkPathOverride>true</EnableFrameworkPathOverride>
